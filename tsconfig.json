@@ -1,9 +1,8 @@
 {
     "version": "1.5.0-beta",
     "compilerOptions": {
-        "outDir": "./lib/",
-        "target": "es5",
-        "module": "commonjs",
+        "outDir": "./es6-lib/",
+        "target": "es6",
         "isolatedModules": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
@@ -26,7 +25,6 @@
         "./src/i-output.ts",
         "./src/output-area.ts",
         "./src/output-provider.ts",
-        "./src/typings/es6-promise.d.ts",
         "./src/typings/transformime.d.ts"
     ]
 }

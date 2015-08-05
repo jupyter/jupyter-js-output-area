@@ -1,5 +1,3 @@
-/// <reference path="./es6-promise.d.ts" />
-
 declare module 'transformime' {
     export interface Transformer {
         mimetype: string;
