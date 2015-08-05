@@ -19,12 +19,12 @@
         "!./node_modules/**/*"
     ],
     "files": [
-        "./src/glue.ts",
-        "./src/i-output-area.ts",
-        "./src/i-output-stateful.ts",
+        "./src/i-output-model.ts",
+        "./src/i-output-view.ts",
         "./src/i-output.ts",
-        "./src/output-area.ts",
-        "./src/output-provider.ts",
+        "./src/output-model.ts",
+        "./src/output-view.ts",
+        "./src/typings/events.d.ts",
         "./src/typings/transformime.d.ts"
     ]
 }

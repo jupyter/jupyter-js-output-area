@@ -1,5 +1,8 @@
+/// <reference path="./typings/events.d.ts" />
+
 import {IOutput} from './i-output';
-import {IOutputStateful, IStateChangeCallback} from './i-output-stateful';
+import {IOutputModel} from './i-output-model';
+import {EventEmitter} from 'events';
 
 /**
  * Provides Jupyter outputs to an output area.
@@ -7,8 +10,7 @@ import {IOutputStateful, IStateChangeCallback} from './i-output-stateful';
  * This class manages the conversion of Jupyter messages to output state, and
  * handles adding the output state to the output area.
  */
-export class OutputProvider implements IOutputStateful {
-    public onchange: IStateChangeCallback[];
+export class OutputModel extends EventEmitter implements IOutputModel {
     private _clear_queued: boolean = false;
     private _state: IOutput[];
     
@@ -16,28 +18,31 @@ export class OutputProvider implements IOutputStateful {
      * Public constructor
      */
     public constructor() {
-        this.onchange = [];
+        super();
         this._state = [];
     }
     
     /**
-     * Get current state
+     * State
+     * @return {IOutput[]}
      */
     public get state(): IOutput[] {
         return this._state.slice();
     }
+    /**
+     * State
+     * @param  {IOutput[]} value new state
+     */
     public set state(value: IOutput[]) {
-        if (this.onchange && this.onchange.length > 0) {
-            this.onchange.map(cb => cb.call(this, value, this._state));
-        }
+        this.emit('change', value, this._state);
         this._state = value;
     }
     
     /**
-     * Consumes a Jupyter msg protocol message.  Ignores messages that it
-     * doesn't know how to handle.
-     * @param msg - Jupyter msg JSON object
-     * @returns whether or not message was consumed
+     * Consumes a Jupyter msg protocol message.
+     * Ignores messages that it doesn't know how to handle.
+     * @param  {any}     msg Jupyter protocol msg JSON
+     * @return {boolean}     was the msg consumed
      */
     public consume_msg(msg: any): boolean {
         var state: any[] = this.state;
