@@ -37,12 +37,15 @@
     "url": "https://github.com/jupyter/jupyter-js-output-area/issues"
   },
   "homepage": "https://github.com/jupyter/jupyter-js-output-area#readme",
+  "dependencies": {
+    "transformime": "^2.0.0",
+    "transformime-jupyter-transformers": "^0.1.0"
+  },
   "devDependencies": {
     "browserify": "^11.0.1",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.4.0",
     "rimraf": "^2.4.2",
-    "transformime": "^1.0.0",
     "typescript": "^1.5.3"
   }
 }

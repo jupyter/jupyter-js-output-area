@@ -1,3 +1,5 @@
+/// <reference path="./es6-promise.d.ts" />
+
 declare module 'transformime' {
     export interface Transformer {
         mimetype: string;
@@ -5,11 +7,11 @@ declare module 'transformime' {
     }
     
     export class Transformime {
-        constructor(transformers: any[]);
-        transformRichest(bundle: any, doc?: Document): Promise<{mimetype: string, el: HTMLElement}> ;
-        transformRetainMimetype(data: any, mimetype: string, doc?: Document): Promise<{mimetype: string, el: HTMLElement}>;
-        transformAll(bundle: any, doc?: Document): Promise<HTMLElement[]>;
-        transform(data: any, mimetype: string, doc?: Document): Promise<HTMLElement>;
-        getTransformer(mimetype: string): Transformer;
+        constructor(transforms?: any[]);
+        transform(bundle: any, document: Document): Promise<HTMLElement>;
+        del(mimetype: string): void;
+        get(mimetype: string): any;
+        set(mimetype: string, transform: any): any;
+        push(transform: any, mimetype: string): any;
     }
 }

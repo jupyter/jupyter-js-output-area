@@ -1,5 +1,5 @@
 import {IOutput} from './i-output';
-import {IOutputArea} from './i-output-area';
+import {IOutputStateful, IStateChangeCallback} from './i-output-stateful';
 
 /**
  * Provides Jupyter outputs to an output area.
@@ -7,34 +7,39 @@ import {IOutputArea} from './i-output-area';
  * This class manages the conversion of Jupyter messages to output state, and
  * handles adding the output state to the output area.
  */
-export class OutputProvider implements IOutputArea {
-    private _outputArea: IOutputArea;
+export class OutputProvider implements IOutputStateful {
+    public onchange: IStateChangeCallback[];
     private _clear_queued: boolean = false;
+    private _state: IOutput[];
     
     /**
      * Public constructor
-     * @param  {IOutputArea} outputArea - output area that the provider will provide for.
      */
-    public constructor(outputArea) {
-        this._outputArea = outputArea;
+    public constructor() {
+        this.onchange = [];
+        this._state = [];
     }
     
     /**
      * Get current state
      */
     public get state(): IOutput[] {
-        return this._outputArea.state;
+        return this._state.slice();
     }
     public set state(value: IOutput[]) {
-        this._outputArea.state = value;
+        if (this.onchange && this.onchange.length > 0) {
+            this.onchange.map(cb => cb.call(this, value, this._state));
+        }
+        this._state = value;
     }
     
     /**
-     * Handle a Jupyter msg protocol message.  Ignores messages that it
+     * Consumes a Jupyter msg protocol message.  Ignores messages that it
      * doesn't know how to handle.
-     * @param  {any} msg - Jupyter msg JSON object
+     * @param msg - Jupyter msg JSON object
+     * @returns whether or not message was consumed
      */
-    public handle_msg(msg: any): void {
+    public consume_msg(msg: any): boolean {
         var state: any[] = this.state;
         if (this._clear_queued) {
             state = [];
@@ -56,7 +61,7 @@ export class OutputProvider implements IOutputArea {
                 } else {
                     state = [];
                 }
-                return;
+                return true;
             case 'stream':
                 output.text = content.text;
                 output.name = content.name;
@@ -77,9 +82,10 @@ export class OutputProvider implements IOutputArea {
                 break;
             default:
                 console.warn('unhandled output message', msg);
-                return;
+                return false;
         }
         state.push(<IOutput>output);
         this.state = state;
+        return true;
     }
 }

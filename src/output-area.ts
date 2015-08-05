@@ -1,6 +1,7 @@
 /// <reference path="./typings/transformime.d.ts" />
 
 import {IOutput} from './i-output';
+import {IStateChangeCallback} from './i-output-stateful';
 import {IOutputArea} from './i-output-area';
 import {Transformime} from 'transformime';
 
@@ -8,21 +9,32 @@ import {Transformime} from 'transformime';
  * Displays output area state.
  */
 export class OutputArea implements IOutputArea {
-    private _doc: Document;
+    public onchange: IStateChangeCallback[];
+    private _document: Document;
+    private _el: HTMLElement;
     private _transformime: Transformime;
     private _state: IOutput[];
     
     /**
      * Public constructor
-     * @param  {Document} doc=document - optionally provide a handle to the
-     *                                 Document instance that the output will be
-     *                                 rendered in.
+     * @param  {Document} document - provide a handle to the
+     *                               Document instance that the output will be
+     *                               rendered in.
      */
-    public constructor(doc: Document = document) {
-        this._doc = doc;
-        // TODO: Add transformers.
-        this._transformime = new Transformime([]);
+    public constructor(document: Document) {
+        this.onchange = [];
+        this._document = document;
+        this._el = this._document.createElement('div');
+        
+        this._transformime = new Transformime();
         this._state = [];
+    }
+    
+    /**
+     * Output container
+     */
+    public get el(): HTMLElement {
+        return this._el;
     }
     
     /**
@@ -34,9 +46,13 @@ export class OutputArea implements IOutputArea {
     public set state(value: IOutput[]) {
         // TODO: Diff the state with the old state and only update what needs
         // to be updated.
-        this._state = value;
         for (let output of value) {
             
         }
+    
+        if (this.onchange && this.onchange.length > 0) {
+            this.onchange.map(cb => cb.call(this, value, this._state));
+        }
+        this._state = value;
     }
 }

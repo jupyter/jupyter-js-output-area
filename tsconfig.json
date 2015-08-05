@@ -20,10 +20,13 @@
         "!./node_modules/**/*"
     ],
     "files": [
+        "./src/glue.ts",
         "./src/i-output-area.ts",
+        "./src/i-output-stateful.ts",
         "./src/i-output.ts",
         "./src/output-area.ts",
         "./src/output-provider.ts",
+        "./src/typings/es6-promise.d.ts",
         "./src/typings/transformime.d.ts"
     ]
 }
