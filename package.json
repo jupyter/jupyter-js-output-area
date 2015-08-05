@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf ./lib && mkdirp ./lib",
-    "build": "tsc",
+    "build": "npm run build:es5 && npm run build:browser",
+    "build:es5": "babel src --out-dir lib/ --source-maps",
+    "build:browser": "browserify lib/*.js --outfile dist/jupyter-js-output-area.js",
+    "prepublish": "npm run build",
     "watch": "npm run watch:build -s",
     "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'"
   },
@@ -42,6 +45,7 @@
     "transformime-jupyter-transformers": "^0.1.0"
   },
   "devDependencies": {
+    "babel": "^5.8.20",
     "browserify": "^11.0.1",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.4.0",
