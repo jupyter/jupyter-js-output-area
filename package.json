@@ -6,10 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf ./es6-lib && mkdirp ./es6-lib && rimraf ./es5-lib && mkdirp ./es5-lib && rimraf ./dist && mkdirp ./dist",
-    "build": "npm run build:ts && npm run build:es5 && npm run build:browser",
-    "build:ts": "tsc",
-    "build:es5": "babel es6-lib/ --out-dir es5-lib/ --source-maps",
-    "build:browser": "browserify es5-lib/*.js --outfile dist/jupyter-js-output-area.js",
+    "build": "npm run build:es5 && npm run build:browser",
+    "build:es5": "babel src/ --out-dir lib/ --source-maps",
+    "build:browser": "browserify lib/*.js --outfile dist/jupyter-js-output-area.js",
     "prepublish": "npm run build",
     "watch": "npm run watch:build -s",
     "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'"
@@ -50,7 +49,6 @@
     "browserify": "^11.0.1",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.4.0",
-    "rimraf": "^2.4.2",
-    "typescript": "^1.5.3"
+    "rimraf": "^2.4.2"
   }
 }

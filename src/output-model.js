@@ -1,7 +1,4 @@
-/// <reference path="./typings/events.d.ts" />
 
-import {IOutput} from './i-output';
-import {IOutputModel} from './i-output-model';
 import {EventEmitter} from 'events';
 
 /**
@@ -10,30 +7,30 @@ import {EventEmitter} from 'events';
  * This class manages the conversion of Jupyter messages to output state, and
  * handles adding the output state to the output area.
  */
-export class OutputModel extends EventEmitter implements IOutputModel {
-    private _clear_queued: boolean = false;
-    private _state: IOutput[];
+export class OutputModel extends EventEmitter {
+    
     
     /**
      * Public constructor
      */
-    public constructor() {
+    constructor() {
         super();
         this._state = [];
+        this._clear_queued = false;
     }
     
     /**
      * State
-     * @return {IOutput[]}
+     * @return {Output[]}
      */
-    public get state(): IOutput[] {
+    get state() {
         return this._state.slice();
     }
     /**
      * State
-     * @param  {IOutput[]} value new state
+     * @param  {Output[]} value new state
      */
-    public set state(value: IOutput[]) {
+    set state(value) {
         this.emit('change', value, this._state);
         this._state = value;
     }
@@ -44,14 +41,14 @@ export class OutputModel extends EventEmitter implements IOutputModel {
      * @param  {any}     msg Jupyter protocol msg JSON
      * @return {boolean}     was the msg consumed
      */
-    public consume_msg(msg: any): boolean {
-        var state: any[] = this.state;
+    consume_msg(msg) {
+        var state = this.state;
         if (this._clear_queued) {
             state = [];
             this._clear_queued = false;
         }
             
-        var output: any = {};
+        var output = {};
         var msg_type = output.output_type = msg.header.msg_type;
         var content = msg.content;
         switch (msg_type) {
@@ -89,7 +86,7 @@ export class OutputModel extends EventEmitter implements IOutputModel {
                 console.warn('unhandled output message', msg);
                 return false;
         }
-        state.push(<IOutput>output);
+        state.push(output);
         this.state = state;
         return true;
     }

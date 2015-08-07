@@ -1,8 +1,3 @@
-/// <reference path="./typings/transformime.d.ts" />
-
-import {IOutput} from './i-output';
-import {IOutputView} from './i-output-view';
-import {IOutputModel} from './i-output-model';
 import {
     Transformime,
     TextTransformer,
@@ -20,11 +15,7 @@ import {
 /**
  * Displays output area state.
  */
-export class OutputView implements IOutputView {
-    private _model: IOutputModel;
-    private _document: Document;
-    private _el: HTMLElement;
-    private _transformime: Transformime;
+export class OutputView {
     
     /**
      * Public constructor
@@ -32,7 +23,7 @@ export class OutputView implements IOutputView {
      * @param  {Document}     document handle to the Document instance that 
      *                                 the output will be rendered in.
      */
-    public constructor(model: IOutputModel, document: Document) {
+    constructor(model, document) {
         this._model = model;
         this._document = document;
         this._el = this._document.createElement('div');
@@ -59,23 +50,23 @@ export class OutputView implements IOutputView {
      * Output container element
      * @return {HTMLElement}
      */
-    public get el(): HTMLElement {
+    get el() {
         return this._el;
     }
     
     /**
      * Listen to relevant model events.
      */
-    private _bindEvents(): void {
+    _bindEvents() {
         this._model.on('change', this._modelChange.bind(this));
     }
     
     /**
      * Handle when the model changes.
-     * @param {IOutput[]} newState new state of the model
-     * @param {IOutput[]} oldState old, previous, state of the model
+     * @param {Output[]} newState new state of the model
+     * @param {Output[]} oldState old, previous, state of the model
      */
-    private _modelChange(newState: IOutput[], oldState: IOutput[]): void {
+    _modelChange(newState, oldState) {
         // TODO: Diff states.
         // Fast, but ugly way to clear all of the elements.
         while (this.el.firstChild) {
@@ -85,7 +76,7 @@ export class OutputView implements IOutputView {
         // Use transformime to render state.
         var orderPromise = Promise.resolve();
         for (let output of newState) {
-            let bundle: any = {};
+            let bundle = {};
             switch(output.output_type) {
                 case 'execute_result':
                 case 'display_data':
@@ -115,7 +106,7 @@ export class OutputView implements IOutputView {
 
             let elementPromise = this._transformime.transform(bundle, this._document);
             orderPromise = orderPromise.then(() => {
-                return elementPromise.then((results: {el: HTMLElement, mimetype: string}) => {
+                return elementPromise.then((results) => {
                     this.el.appendChild(results.el);
                 });
             });

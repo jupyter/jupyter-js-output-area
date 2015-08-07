@@ -1,6 +1,5 @@
 # Builds
-es5-lib/
-es6-lib/
+lib/
 dist/
 
 # Logs
