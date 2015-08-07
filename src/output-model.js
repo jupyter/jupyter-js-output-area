@@ -41,7 +41,7 @@ export class OutputModel extends EventEmitter {
      * @param  {any}     msg Jupyter protocol msg JSON
      * @return {boolean}     was the msg consumed
      */
-    consume_msg(msg) {
+    consumeMessage(msg) {
         let state = this.state;
         if (this._cleaQqueued) {
             state = [];

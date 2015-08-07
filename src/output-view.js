@@ -98,7 +98,7 @@ export class OutputView {
                     bundle = {'text/plain': 'Unrecognized output type' + JSON.stringify(output)};
             }
 
-            let elementPromise = this.transformime.transform(bundle, this._document);
+            let elementPromise = this.transformime.transform(bundle, this.document);
             orderPromise = orderPromise.then(() => {
                 return elementPromise.then((results) => {
                     this.el.appendChild(results.el);
