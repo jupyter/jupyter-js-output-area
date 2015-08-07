@@ -24,9 +24,11 @@ export class OutputView {
      *                                 the output will be rendered in.
      */
     constructor(model, document) {
-        this._model = model;
-        this._document = document;
-        this._el = this._document.createElement('div');
+        this.model = model;
+        
+        let el = document.createElement('div');
+        Object.defineProperty(this, 'document', {get: () => document});
+        Object.defineProperty(this, 'el', {get: () => el});
         
         // Transformers are in reverse priority order
         // so that new ones can be `push`ed on with higher priority
@@ -41,24 +43,16 @@ export class OutputView {
             HTMLTransformer
             // JavaScript would go here, IF I HAD ONE
         ];
-        this._transformime = new Transformime(transformers);
+        this.transformime = new Transformime(transformers);
         
         this._bindEvents();
-    }
-    
-    /**
-     * Output container element
-     * @return {HTMLElement}
-     */
-    get el() {
-        return this._el;
     }
     
     /**
      * Listen to relevant model events.
      */
     _bindEvents() {
-        this._model.on('change', this._modelChange.bind(this));
+        this.model.on('change', this._modelChange.bind(this));
     }
     
     /**
@@ -74,7 +68,7 @@ export class OutputView {
         }
         
         // Use transformime to render state.
-        var orderPromise = Promise.resolve();
+        let orderPromise = Promise.resolve();
         for (let output of newState) {
             let bundle = {};
             switch(output.output_type) {
@@ -91,8 +85,8 @@ export class OutputView {
                     traceback = output.traceback;
                     if (traceback !== undefined && traceback.length > 0) {
                         text = '';
-                        var len = traceback.length;
-                        for (var i=0; i<len; i++) {
+                        let len = traceback.length;
+                        for (let i=0; i<len; i++) {
                             text = text + traceback[i] + '\n';
                         }
                         text = text + '\n';
@@ -104,7 +98,7 @@ export class OutputView {
                     bundle = {'text/plain': 'Unrecognized output type' + JSON.stringify(output)};
             }
 
-            let elementPromise = this._transformime.transform(bundle, this._document);
+            let elementPromise = this.transformime.transform(bundle, this._document);
             orderPromise = orderPromise.then(() => {
                 return elementPromise.then((results) => {
                     this.el.appendChild(results.el);

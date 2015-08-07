@@ -15,8 +15,8 @@ export class OutputModel extends EventEmitter {
      */
     constructor() {
         super();
-        this._state = [];
-        this._clear_queued = false;
+        this.clearQueued = false;
+        this._state = [];        
     }
     
     /**
@@ -42,16 +42,16 @@ export class OutputModel extends EventEmitter {
      * @return {boolean}     was the msg consumed
      */
     consume_msg(msg) {
-        var state = this.state;
-        if (this._clear_queued) {
+        let state = this.state;
+        if (this._cleaQqueued) {
             state = [];
-            this._clear_queued = false;
+            this._clearQueued = false;
         }
             
-        var output = {};
-        var msg_type = output.output_type = msg.header.msg_type;
-        var content = msg.content;
-        switch (msg_type) {
+        let output = {};
+        let msgType = output.output_type = msg.header.msg_type;
+        let content = msg.content;
+        switch (msgType) {
             case 'clear_output':
                 // msg spec v4 had stdout, stderr, display keys
                 // v4.1 replaced these with just wait
@@ -59,7 +59,7 @@ export class OutputModel extends EventEmitter {
                 // so v4 messages will still be properly handled,
                 // except for the rarely used clearing less than all output.
                 if (msg.content.wait) {
-                    this._clear_queued = true;
+                    this._clearQueued = true;
                 } else {
                     state = [];
                 }
