@@ -27,12 +27,12 @@
       });
   }
   
-  fetchJSONFile('./data/data.json').then(function(json) {
+  fetchJSONFile('./data/data.json').then(function(messages) {
       var model = new jupyterOutputArea.OutputModel();
       var view = new jupyterOutputArea.OutputView(model, document);
       document.getElementById('screen').appendChild(view.el);
-      for (var i = 0; i < json.length; i++) {
-          model.consumeMessage(json[i]);
+      for (var i = 0; i < messages.length; i++) {
+          model.consumeMessage(messages[i]);
       }
   }).catch(function(err) {
       console.error('Could not load sample data: ', err);

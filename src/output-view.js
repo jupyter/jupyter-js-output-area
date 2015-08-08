@@ -19,7 +19,7 @@ export class OutputView {
     
     /**
      * Public constructor
-     * @param  {IOutputModel} model    output model that this view represents
+     * @param  {OutputModel}  model    output model that this view represents
      * @param  {Document}     document handle to the Document instance that 
      *                                 the output will be rendered in.
      */
@@ -45,13 +45,7 @@ export class OutputView {
         ];
         this.transformime = new Transformime(transformers);
         
-        this._bindEvents();
-    }
-    
-    /**
-     * Listen to relevant model events.
-     */
-    _bindEvents() {
+        // Bind events.
         this.model.on('change', this._modelChange.bind(this));
     }
     
@@ -67,7 +61,9 @@ export class OutputView {
             this.el.removeChild(this.el.firstChild);
         }
         
-        // Use transformime to render state.
+        // Use transformime to render state.  Order promise is used to create a
+        // promise chain, which ensures the output gets rendered in the correct 
+        // order.
         let orderPromise = Promise.resolve();
         for (let output of newState) {
             let bundle = {};
@@ -79,11 +75,11 @@ export class OutputView {
                 case 'stream':
                     bundle = {'jupyter/console-text': output.data.text};
                     break;
-                case 'error':
+                case 'error' && output.traceback !== undefined:
                     // The parts that used to be the TracebackTransform
                     let text, traceback;
                     traceback = output.traceback;
-                    if (traceback !== undefined && traceback.length > 0) {
+                    if (traceback.length > 0) {
                         text = '';
                         let len = traceback.length;
                         for (let i=0; i<len; i++) {

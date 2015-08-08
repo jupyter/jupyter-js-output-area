@@ -43,7 +43,7 @@ export class OutputModel extends EventEmitter {
      */
     consumeMessage(msg) {
         let state = this.state;
-        if (this._cleaQqueued) {
+        if (this._clearQueued) {
             state = [];
             this._clearQueued = false;
         }

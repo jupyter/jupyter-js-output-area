@@ -18,7 +18,7 @@ cd jupyter-js-output-area
 
 To build
 ```
-npm install --dev
+npm install
 npm run build
 ```
 
