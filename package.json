@@ -1,0 +1,54 @@
+{
+  "name": "jupyter-js-output-area",
+  "version": "0.0.1",
+  "description": "Library for handling and displaying Jupyter output messages.",
+  "main": "lib/output-area.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "rimraf ./lib && mkdirp ./lib && rimraf ./dist && mkdirp ./dist",
+    "build": "npm run build:es5 && npm run build:browser",
+    "build:es5": "babel src/ --out-dir lib/ --source-maps",
+    "build:browser": "browserify lib/index.js --outfile dist/jupyter-js-output-area.js --standalone jupyterOutputArea --debug",
+    "prepublish": "npm run build",
+    "watch": "npm run watch:build -s",
+    "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jupyter/jupyter-js-output-area.git"
+  },
+  "keywords": [
+    "jupyter",
+    "js",
+    "frontend",
+    "front",
+    "end",
+    "output",
+    "area",
+    "outputarea",
+    "display",
+    "mimetype",
+    "mime",
+    "notebook",
+    "component",
+    "message",
+    "msg"
+  ],
+  "author": "Project Jupyter",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/jupyter/jupyter-js-output-area/issues"
+  },
+  "homepage": "https://github.com/jupyter/jupyter-js-output-area#readme",
+  "dependencies": {
+    "transformime": "^2.0.0",
+    "transformime-jupyter-transformers": "^0.1.0"
+  },
+  "devDependencies": {
+    "babel": "^5.8.20",
+    "browserify": "^11.0.1",
+    "mkdirp": "^0.5.1",
+    "nodemon": "^1.4.0",
+    "rimraf": "^2.4.2"
+  }
+}
