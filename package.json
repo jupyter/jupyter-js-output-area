@@ -2,7 +2,7 @@
   "name": "jupyter-js-output-area",
   "version": "0.0.2",
   "description": "Library for handling and displaying Jupyter output messages.",
-  "main": "lib/output-area.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf ./lib && mkdirp ./lib && rimraf ./dist && mkdirp ./dist",
