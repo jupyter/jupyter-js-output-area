@@ -27,8 +27,8 @@ export class OutputView {
         this.model = model;
         
         let el = document.createElement('div');
-        Object.defineProperty(this, 'document', {get: () => document});
-        Object.defineProperty(this, 'el', {get: () => el});
+        this.getDocument = () => document;
+        this.getEl = () => el;
         
         // Transformers are in reverse priority order
         // so that new ones can be `push`ed on with higher priority
@@ -47,6 +47,22 @@ export class OutputView {
         
         // Bind events.
         this.model.on('change', this._modelChange.bind(this));
+    }
+    
+    /**
+     * Document used for rendering.
+     * @return {Document}
+     */
+    get document() {
+        return this.getDocument();
+    }
+    
+    /**
+     * Container element.
+     * @return {HTMLElement}
+     */
+    get el() {
+        return this.getEl();
     }
     
     /**
