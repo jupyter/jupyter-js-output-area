@@ -11,7 +11,11 @@
     "build:browser": "browserify lib/index.js --outfile dist/jupyter-js-output-area.js --standalone jupyterOutputArea --debug",
     "prepublish": "npm run build",
     "watch": "npm run watch:build -s",
-    "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'"
+    "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'",
+    "serve": "http-server -p 9090",
+    "live-reload": "live-reload --port 9091 dist/ demo/",
+    "open:dev": "open http://localhost:9090/demo/",
+    "dev": "npm run open:dev -s & parallelshell 'npm run live-reload -s' 'npm run serve -s' 'npm run watch -s'"
   },
   "repository": {
     "type": "git",
@@ -47,8 +51,11 @@
   "devDependencies": {
     "babel": "^5.8.20",
     "browserify": "^11.0.1",
+    "http-server": "^0.8.0",
+    "live-reload": "^1.1.0",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.4.0",
+    "parallelshell": "^2.0.0",
     "rimraf": "^2.4.2"
   }
 }

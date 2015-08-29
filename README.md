@@ -2,7 +2,8 @@
 Javascript APIs for Jupyter output areas
 
 ## Demo
-See [./demo/demo.html](demo/demo.html).
+In order to run the demo, build the package as described in the instructions
+below and run `npm run dev`. Your browser window will open the demo.
 
 ## Install
 ### Stable (npm):
