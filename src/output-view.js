@@ -92,20 +92,25 @@ export class OutputView {
                     bundle = {'jupyter/console-text': output.data.text};
                     break;
                 case 'error':
+                    let text;
+                    console.log(output);
                     if (output.traceback === undefined) {
-                      break;
+                      text = output.ename + ": " + output.evalue;
+                    } else {
+                      // The parts that used to be the TracebackTransform
+                      let traceback;
+                      traceback = output.traceback;
+                      if (traceback.length > 0) {
+                          text = '';
+                          let len = traceback.length;
+                          for (let i=0; i<len; i++) {
+                              text = text + traceback[i] + '\n';
+                          }
+                          text = text + '\n';
+                      }
+
                     }
-                    // The parts that used to be the TracebackTransform
-                    let text, traceback;
-                    traceback = output.traceback;
-                    if (traceback.length > 0) {
-                        text = '';
-                        let len = traceback.length;
-                        for (let i=0; i<len; i++) {
-                            text = text + traceback[i] + '\n';
-                        }
-                        text = text + '\n';
-                    }
+
                     bundle = {'jupyter/console-text': text};
                     break;
                 default:
