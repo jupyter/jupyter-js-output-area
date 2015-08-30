@@ -16,20 +16,20 @@ import {
  * Displays output area state.
  */
 export class OutputView {
-    
+
     /**
      * Public constructor
      * @param  {OutputModel}  model    output model that this view represents
-     * @param  {Document}     document handle to the Document instance that 
+     * @param  {Document}     document handle to the Document instance that
      *                                 the output will be rendered in.
      */
     constructor(model, document) {
         this.model = model;
-        
+
         let el = document.createElement('div');
         this.getDocument = () => document;
         this.getEl = () => el;
-        
+
         // Transformers are in reverse priority order
         // so that new ones can be `push`ed on with higher priority
         let transformers = [
@@ -44,11 +44,11 @@ export class OutputView {
             // JavaScript would go here, IF I HAD ONE
         ];
         this.transformime = new Transformime(transformers);
-        
+
         // Bind events.
         this.model.on('change', this._modelChange.bind(this));
     }
-    
+
     /**
      * Document used for rendering.
      * @return {Document}
@@ -56,7 +56,7 @@ export class OutputView {
     get document() {
         return this.getDocument();
     }
-    
+
     /**
      * Container element.
      * @return {HTMLElement}
@@ -64,7 +64,7 @@ export class OutputView {
     get el() {
         return this.getEl();
     }
-    
+
     /**
      * Handle when the model changes.
      * @param {Output[]} newState new state of the model
@@ -76,9 +76,9 @@ export class OutputView {
         while (this.el.firstChild) {
             this.el.removeChild(this.el.firstChild);
         }
-        
+
         // Use transformime to render state.  Order promise is used to create a
-        // promise chain, which ensures the output gets rendered in the correct 
+        // promise chain, which ensures the output gets rendered in the correct
         // order.
         let orderPromise = Promise.resolve();
         for (let output of newState) {
@@ -91,7 +91,10 @@ export class OutputView {
                 case 'stream':
                     bundle = {'jupyter/console-text': output.data.text};
                     break;
-                case 'error' && output.traceback !== undefined:
+                case 'error':
+                    if (output.traceback === undefined) {
+                      break;
+                    }
                     // The parts that used to be the TracebackTransform
                     let text, traceback;
                     traceback = output.traceback;
