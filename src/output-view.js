@@ -93,7 +93,6 @@ export class OutputView {
                     break;
                 case 'error':
                     let text;
-                    console.log(output);
                     if (output.traceback === undefined) {
                       text = output.ename + ": " + output.evalue;
                     } else {
