@@ -46,12 +46,13 @@
   "homepage": "https://github.com/jupyter/jupyter-js-output-area#readme",
   "dependencies": {
     "transformime": "^2.0.0",
-    "transformime-jupyter-transformers": "^0.1.0"
+    "transformime-jupyter-transformers": "^0.2.0"
   },
   "devDependencies": {
     "babel": "^5.8.20",
     "browserify": "^11.0.1",
     "http-server": "^0.8.0",
+    "jsdom": "^6.2.0",
     "live-reload": "^1.1.0",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.4.0",
