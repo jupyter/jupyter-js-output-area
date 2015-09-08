@@ -89,7 +89,7 @@ export class OutputView {
                     bundle = output.data;
                     break;
                 case 'stream':
-                    bundle = {'jupyter/console-text': output.data.text};
+                    bundle = {'jupyter/console-text': output.text};
                     break;
                 case 'error':
                     let text;
