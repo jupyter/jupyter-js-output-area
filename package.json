@@ -1,6 +1,6 @@
 {
   "name": "jupyter-js-output-area",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Library for handling and displaying Jupyter output messages.",
   "main": "lib/index.js",
   "scripts": {
