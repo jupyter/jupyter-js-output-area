@@ -15,7 +15,8 @@
     "serve": "http-server -p 9090",
     "live-reload": "live-reload --port 9091 dist/ demo/",
     "open:dev": "open http://localhost:9090/demo/",
-    "dev": "npm run open:dev -s & parallelshell 'npm run live-reload -s' 'npm run serve -s' 'npm run watch -s'"
+    "dev": "npm run open:dev -s & parallelshell 'npm run live-reload -s' 'npm run serve -s' 'npm run watch -s'",
+    "test": "mocha --compilers js:babel/register"
   },
   "repository": {
     "type": "git",
