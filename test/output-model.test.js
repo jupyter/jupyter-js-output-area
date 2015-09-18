@@ -11,4 +11,27 @@ describe("Output Model Tests", function() {
         assert.lengthOf(this.model._state, 0);
         done();
     });
+    it("Set the state of OutputModel", function(done) {
+        var banana = ["Banana"];
+        this.model._state = banana;
+        assert.lengthOf(this.model._state, 1);
+        assert.equal(this.model._state, banana);
+        done();
+    });
+    it("consumeMessage errors on unkown message type", function(done) {
+        var badMsg = {
+            "header" : {
+                "msg_id" : "6e539a79-6e41-4767-ba4b-33b938fb73e2",
+                "username" : "tester",
+                "session": "c38c32e4-be39-43e5-a8f5-36dfb2551d4c",
+                "msg_type": "unknown_fruit",
+                "version": "5.0"
+            },
+            "parent_header" : {},
+            "metadata": {},
+            "content": {}
+        };
+        assert.isFalse(this.model.consumeMessage(badMsg));
+        done();
+    });
 });
