@@ -13,9 +13,10 @@ describe("Output Model Tests", function() {
     });
     it("Set the state of OutputModel", function(done) {
         var banana = ["Banana"];
-        this.model._state = banana;
+        this.model.state = banana;
         assert.lengthOf(this.model._state, 1);
-        assert.equal(this.model._state, banana);
+        assert.equal(this.model.state, "Banana");
+        this.model.state = [];
         done();
     });
     it("consumeMessage errors on unkown message type", function(done) {
