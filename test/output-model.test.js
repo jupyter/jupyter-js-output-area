@@ -35,4 +35,44 @@ describe("Output Model Tests", function() {
         assert.isFalse(this.model.consumeMessage(badMsg));
         done();
     });
+    it("consumeMessage properly handles a clear_output message", function(done) {
+        var coMsg = {
+            "header" : {
+                "msg_id" : "6e539a79-6e41-4767-ba4b-33b938fb73e2",
+                "username" : "tester",
+                "session": "c38c32e4-be39-43e5-a8f5-36dfb2551d4c",
+                "msg_type": "clear_output",
+                "version": "5.0"
+            },
+            "parent_header" : {},
+            "metadata": {},
+            "content": {}
+        };
+        assert.isTrue(this.model.consumeMessage(coMsg));
+        done();
+    });
+    it("consumeMessage properly handles a stream message", function(done) {
+        var sMsg = {
+            "header" : {
+                "msg_id" : "6e539a79-6e41-4767-ba4b-33b938fb73e2",
+                "username" : "tester",
+                "session": "c38c32e4-be39-43e5-a8f5-36dfb2551d4c",
+                "msg_type": "stream",
+                "version": "5.0"
+            },
+            "parent_header" : {},
+            "metadata": {},
+            "content": {
+                "name": "stdout",
+                "text": "This is a stream test"
+            }
+        };
+        assert.isTrue(this.model.consumeMessage(sMsg));
+        var expected = sMsg.content;
+        assert.lengthOf(this.model.state, 1);
+        assert.equal(this.model.state[0].output_type, "stream");
+        assert.equal(this.model.state[0].name, "stdout");
+        assert.equal(this.model.state[0].text, "This is a stream test");
+        done();
+    });
 });
