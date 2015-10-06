@@ -75,4 +75,62 @@ describe("Output Model Tests", function() {
         assert.equal(this.model.state[0].text, "This is a stream test");
         done();
     });
+    it("consumeMessage properly handles a display_data message", function(done) {
+        var dMsg = {
+            "header" : {
+                "msg_id" : "6e539a79-6e41-4767-ba4b-33b938fb73e2",
+                "username" : "tester",
+                "session": "c38c32e4-be39-43e5-a8f5-36dfb2551d4c",
+                "msg_type": "stream",
+                "version": "5.0"
+            },
+            "parent_header" : {},
+            "metadata": {},
+            "content": {
+                "source" : "stevo",
+                
+            }
+        };
+        assert.isTrue(this.model.consumeMessage(dMsg));
+        done();
+    });
+    it("consumeMessage properly handles a execute_result message", function(done) {
+        var eMsg = {
+            "header": {
+                "msg_id": "6e539a79-6e41-4767-ba4b-33b938fb73e2",
+                "username": "tester",
+                "session": "c38c32e4-be39-43e5-a8f5-36dfb2551d4c",
+                "msg_type": "execute_result",
+                "version": "5.0"
+            },
+            "parent_header": {},
+            "metadata": {},
+            "content": {
+                "data": "test_data",
+                "metadata": "test_metadata",
+                "execution_count": 0
+            }
+        };
+        assert.isTrue(this.model.consumeMessage(eMsg));
+        done();
+    });
+    it("consumeMessage properly handles a error message", function(done) {
+        var errMsg = {
+            "header": {
+                "msg_id": "6e539a79-6e41-4767-ba4b-33b938fb73e2",
+                "username": "tester",
+                "session": "c38c32e4-be39-43e5-a8f5-36dfb2551d4c",
+                "msg_type": "error",
+                "version": "5.0"
+            },
+            "parent_header": {},
+            "metadata": {},
+            "content": {
+                "name": "big problem",
+                "evalue": "You've got a big problem",
+                "traceback": "Traceback \n Problems everywhere"
+            }
+        };
+        assert.isTrue(this.model.consumeMessage(errMsg));
+        done();
 });
