@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf ./lib && mkdirp ./lib && rimraf ./dist && mkdirp ./dist",
-    "build": "npm run build:es5 && npm run build:browser",
+    "build": "npm run build:es5 && npm run build:browser && npm run build:dts",
     "build:es5": "babel src/ --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/index.js --outfile dist/jupyter-js-output-area.js --standalone jupyterOutputArea --debug",
+    "build:dts": "node scripts/copydts.js",
     "prepublish": "npm run build",
     "watch": "npm run watch:build -s",
     "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'",
@@ -49,6 +50,7 @@
     "transformime-jupyter-transformers": "^0.2.0"
   },
   "devDependencies": {
+    "glob-copy": "^0.1.0",
     "babel": "^5.8.20",
     "browserify": "^11.0.1",
     "http-server": "^0.8.0",
