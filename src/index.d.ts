@@ -1,11 +1,29 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
+
+/**
+ * The arguments object emitted with the `stateChanged` signal.
+ */
+export
+interface IChangedArgs<T> {
+  name: string,
+  oldValue: T;
+  newValue: T;
+}
+
+
 /**
  * The definition of an output area model.
  */
 export 
 interface IOutputAreaViewModel {
+
+  /**
+   * A signal emitted when state of the output area changes.
+   */
+  stateChanged: ISignal<IOutputAreaViewModel, IChangedArgs<any>>;
+
   /**
    * Whether the output is collapsed.
    */
@@ -78,6 +96,12 @@ enum StreamType { StdOut, StdErr };
  * The base interface for an output view model.
  */
 interface IOutputBaseViewModel {
+
+  /**
+   * A signal emitted when state of the output changes.
+   */
+  stateChanged: ISignal<IOutputBaseViewModel, IChangedArgs<any>>;
+
   /**
    * The output type.
    */
