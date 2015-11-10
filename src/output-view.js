@@ -9,7 +9,9 @@ import {
     consoleTextTransform,
     markdownTransform,
     LaTeXTransform,
-    PDFTransform
+    PDFTransform,
+    SVGTransform,
+    ScriptTransform
 } from "transformime-jupyter-transformers";
 
 /**
@@ -36,12 +38,12 @@ export class OutputView {
             TextTransformer,
             PDFTransform,
             ImageTransformer,
-            // SVG would go here, IF I HAD ONE
+            SVGTransform,
             consoleTextTransform,
             LaTeXTransform,
             markdownTransform,
-            HTMLTransformer
-            // JavaScript would go here, IF I HAD ONE
+            HTMLTransformer,
+            ScriptTransform
         ];
         this.transformime = new Transformime(transformers);
 
