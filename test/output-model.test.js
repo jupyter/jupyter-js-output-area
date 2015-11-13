@@ -11,14 +11,6 @@ describe("Output Model Tests", function() {
         assert.lengthOf(this.model._state, 0);
         done();
     });
-    it("Set the state of OutputModel", function(done) {
-        var banana = ["Banana"];
-        this.model.state = banana;
-        assert.lengthOf(this.model._state, 1);
-        assert.equal(this.model.state, "Banana");
-        this.model.state = [];
-        done();
-    });
     it("consumeMessage errors on unkown message type", function(done) {
         var badMsg = {
             "header" : {
@@ -33,6 +25,7 @@ describe("Output Model Tests", function() {
             "content": {}
         };
         assert.isFalse(this.model.consumeMessage(badMsg));
+        assert.lengthOf(this.model.state, 0);
         done();
     });
     it("consumeMessage properly handles a clear_output message", function(done) {
@@ -49,6 +42,7 @@ describe("Output Model Tests", function() {
             "content": {}
         };
         assert.isTrue(this.model.consumeMessage(coMsg));
+
         done();
     });
     it("consumeMessage properly handles a stream message", function(done) {
@@ -133,4 +127,5 @@ describe("Output Model Tests", function() {
         };
         assert.isTrue(this.model.consumeMessage(errMsg));
         done();
+    });
 });
