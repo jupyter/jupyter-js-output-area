@@ -1,6 +1,8 @@
 # jupyter-js-output-area
 Javascript APIs for Jupyter output areas
 
+[![Build Status](https://travis-ci.org/jupyter/jupyter-js-output-area.svg?branch=master)](https://travis-ci.org/jupyter/jupyter-js-output-area)`
+
 ## Demo
 In order to run the demo, build the package as described in the instructions
 below and run `npm run dev`. Your browser window will open the demo.
