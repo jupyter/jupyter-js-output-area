@@ -5,7 +5,6 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf ./lib && mkdirp ./lib && rimraf ./dist && mkdirp ./dist",
     "build": "npm run build:es5 && npm run build:browser && npm run build:dts",
     "build:es5": "babel src/ --out-dir lib/ --source-maps",
@@ -17,7 +16,8 @@
     "serve": "http-server -p 9090",
     "live-reload": "live-reload --port 9091 dist/ demo/",
     "open:dev": "open http://localhost:9090/demo/",
-    "dev": "npm run open:dev -s & parallelshell 'npm run live-reload -s' 'npm run serve -s' 'npm run watch -s'"
+    "dev": "npm run open:dev -s & parallelshell 'npm run live-reload -s' 'npm run serve -s' 'npm run watch -s'",
+    "test": "mocha --compilers js:babel/register"
   },
   "repository": {
     "type": "git",
@@ -54,10 +54,12 @@
     "glob-copy": "^0.1.0",
     "babel": "^5.8.20",
     "browserify": "^11.0.1",
+    "chai": "^3.2.0",
     "http-server": "^0.8.0",
     "jsdom": "^6.2.0",
     "live-reload": "^1.1.0",
     "mkdirp": "^0.5.1",
+    "mocha": "^2.3.2",
     "nodemon": "^1.4.0",
     "parallelshell": "^2.0.0",
     "rimraf": "^2.4.2"
