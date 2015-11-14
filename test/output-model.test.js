@@ -24,8 +24,9 @@ describe("Output Model Tests", function() {
             "metadata": {},
             "content": {}
         };
-        assert.isFalse(this.model.consumeMessage(badMsg));
-        assert.lengthOf(this.model.state, 0);
+        assert.throws(function() {
+            this.model.consumeMessage(badMsg);
+        }, Error);
         done();
     });
     it("consumeMessage properly handles a clear_output message", function(done) {
