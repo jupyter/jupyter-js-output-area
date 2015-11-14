@@ -115,7 +115,7 @@ export class OutputView {
                     bundle = {'jupyter/console-text': text};
                     break;
                 default:
-                    throw new Error('Unrecognized output type: ' + output.output_type);
+                    throw new Error('Unrecognized output type: ', output.output_type);
                     bundle = {'text/plain': 'Unrecognized output type' + JSON.stringify(output)};
             }
 
