@@ -32,7 +32,11 @@
       var view = new jupyterOutputArea.OutputView(model, document);
       document.getElementById('screen').appendChild(view.el);
       for (var i = 0; i < messages.length; i++) {
-          model.consumeMessage(messages[i]);
+        try {
+            model.consumeMessage(messages[i]);
+        } catch (error) {
+            console.log(error);
+        }
       }
   }).catch(function(err) {
       console.error('Could not load sample data: ', err);
