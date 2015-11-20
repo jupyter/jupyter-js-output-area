@@ -83,7 +83,7 @@ export class OutputModel extends EventEmitter {
                 output.traceback = content.traceback;
                 break;
             default:
-                console.warn('unhandled output message', msg);
+                throw new Error('unhandled output message', msg);
                 return false;
         }
         state.push(output);
