@@ -1,0 +1,2 @@
+import './OutputAreaViewModel';
+import './OutputAreaWidget';

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES5",
+    "outDir": "../lib"
+  },
+
+  "files": [
+    "../typings/es6/es6-promise.d.ts",
+    "../typings/transformime/transformime.d.ts",
+    "index.ts"
+  ]
+}

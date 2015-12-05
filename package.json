@@ -5,19 +5,24 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "prebuild": "rimraf ./lib && mkdirp ./lib && rimraf ./dist && mkdirp ./dist",
-    "build": "npm run build:es5 && npm run build:browser && npm run build:dts",
-    "build:es5": "babel src/ --out-dir lib/ --source-maps",
-    "build:browser": "browserify lib/index.js --outfile dist/jupyter-js-output-area.js --standalone jupyterOutputArea --debug",
-    "build:dts": "node scripts/copydts.js",
+    "clean:lib": "rimraf lib",
+    "clean:example": "rimraf example/*.js example/*.map",
+    "clean:test": "rimraf test/build && rimraf test/coverage",
+    "clean": "npm run clean:lib && npm run clean:example && npm run clean:test",
+    "build:src": "tsc --project src",
+    "build:test": "tsc --project test/src",
+    "build:example": "tsc --project example",
+    "build": "npm run build:src",
+    "docs": "rimraf docs/api && typedoc --options scripts/tdoptions.json",
+    "postinstall": "npm dedupe",
     "prepublish": "npm run build",
+    "test:chrome": "karma start --browsers=Chrome test/karma.conf.js",
+    "test:coverage": "karma start test/karma-cov.conf.js",
+    "test:firefox": "karma start --browsers=Firefox test/karma.conf.js",
+    "test:ie": "karma start --browsers=IE test/karma.conf.js",
+    "test": "npm run test:firefox",
     "watch": "npm run watch:build -s",
-    "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'",
-    "serve": "http-server -p 9090",
-    "live-reload": "live-reload --port 9091 dist/ demo/",
-    "open:dev": "open http://localhost:9090/demo/",
-    "dev": "npm run open:dev -s & parallelshell 'npm run live-reload -s' 'npm run serve -s' 'npm run watch -s'",
-    "test": "mocha --compilers js:babel/register"
+    "watch:build": "nodemon -q -w src/ --ext ts,js --exec 'npm run build'"
   },
   "repository": {
     "type": "git",
@@ -47,21 +52,17 @@
   },
   "homepage": "https://github.com/jupyter/jupyter-js-output-area#readme",
   "dependencies": {
+    "phosphor-observablelist": "^1.0.0-beta",
+    "phosphor-properties": "^2.0.0",
+    "phosphor-signaling": "^1.2.0",
+    "phosphor-widget": "^1.0.0-beta.1",
     "transformime": "^2.1.0",
-    "transformime-jupyter-transformers": "^0.2.0"
+  "transformime-jupyter-transformers": "^0.2.0"
   },
   "devDependencies": {
     "glob-copy": "^0.1.0",
-    "babel": "^5.8.20",
-    "browserify": "^11.0.1",
-    "chai": "^3.2.0",
-    "http-server": "^0.8.0",
-    "jsdom": "^6.2.0",
-    "live-reload": "^1.1.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.3.2",
     "nodemon": "^1.4.0",
-    "parallelshell": "^2.0.0",
     "rimraf": "^2.4.2"
   }
 }
