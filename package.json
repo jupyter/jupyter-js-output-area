@@ -65,7 +65,8 @@
     "nodemon": "^1.4.0",
     "rimraf": "^2.4.2",
     "steal": "^0.12.7",
-    "typedoc": "^0.3.12"
+    "typedoc": "^0.3.12",
+    "typescript": "^1.7.3"
   },
   "system": {
     "npmIgnore": [
