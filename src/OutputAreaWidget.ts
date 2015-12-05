@@ -69,7 +69,7 @@ export
 class OutputAreaWidget extends Panel {
   constructor(model: IOutputAreaViewModel) {
     super();
-    this.addClass('jp-OutputAreaWidget');
+    this.addClass('jp-OutputArea');
     this._model = model;
     this.updateCollapsed(model.collapsed);
     this.updateFixedHeight(model.fixedHeight)
