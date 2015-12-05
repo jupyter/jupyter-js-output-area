@@ -162,7 +162,7 @@ interface IOutputAreaViewModel {
   /**
   * Clear all of the output.
   */
-  clear(): void;
+  clear(wait: boolean): void;
 }
 
 /**
@@ -292,7 +292,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
   add(output: OutputViewModel) {
     // if we received a delayed clear message, then clear now
     if (this._clearNext) {
-      this.clear(false);
+      this.clear();
       this._clearNext = false;
     }
     
@@ -316,7 +316,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
   * 
   * @param wait Delay clearing the output until the next message is added.
   */
-  clear(wait: boolean) {
+  clear(wait: boolean = false) {
     if(wait) {
       this._clearNext = true;
     } else {
