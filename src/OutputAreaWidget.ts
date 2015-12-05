@@ -112,8 +112,8 @@ class OutputAreaWidget extends Panel {
     } else {
       this.node.insertBefore(node, children[index]);
     }
-    this.renderItem(item).then((result: any) => {
-      node.appendChild(result.el);
+    this.renderItem(item).then((childNode) => {
+      node.appendChild(childNode);
     });
   }
   
