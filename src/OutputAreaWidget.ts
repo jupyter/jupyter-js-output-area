@@ -189,15 +189,15 @@ class OutputAreaWidget extends Panel {
   protected modelStateChanged(sender: IOutputAreaViewModel, 
                               args: IChangedArgs<any>) {
     switch (args.name) {
-      case 'collapsed':
-        this.updateCollapsed(args.newValue);
-        break;
-      case 'fixedHeight':
-        this.updateFixedHeight(args.newValue);
-        break;
-      case 'prompt':
-        this.updatePrompt(args.newValue);
-        break;
+    case 'collapsed':
+      this.updateCollapsed(args.newValue);
+      break;
+    case 'fixedHeight':
+      this.updateFixedHeight(args.newValue);
+      break;
+    case 'prompt':
+      this.updatePrompt(args.newValue);
+      break;
     }
   }
 
