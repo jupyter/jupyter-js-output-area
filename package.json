@@ -12,7 +12,7 @@
     "build:src": "tsc --project src",
     "build:test": "tsc --project test/src",
     "build:example": "tsc --project example",
-    "build": "npm run build:src",
+    "build": "npm run build:src && npm run build:example",
     "docs": "rimraf docs/api && typedoc --options scripts/tdoptions.json",
     "postinstall": "npm dedupe",
     "prepublish": "npm run build",
@@ -57,12 +57,18 @@
     "phosphor-signaling": "^1.2.0",
     "phosphor-widget": "^1.0.0-beta.1",
     "transformime": "^2.1.0",
-  "transformime-jupyter-transformers": "^0.2.0"
+    "transformime-jupyter-transformers": "^0.2.0"
   },
   "devDependencies": {
     "glob-copy": "^0.1.0",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.4.0",
-    "rimraf": "^2.4.2"
+    "rimraf": "^2.4.2",
+    "steal": "^0.12.7"
+  },
+  "system": {
+    "npmIgnore": [
+      "devDependencies"
+    ]
   }
 }
