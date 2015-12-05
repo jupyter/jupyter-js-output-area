@@ -22,6 +22,29 @@ export interface MimeBundle {
   'application/json'?: any;
 }
 
+export
+enum OutputType {
+  /**
+   * The "execute_result" message type from the message spec.
+   */
+  ExecuteResult,
+
+  /**
+   * The "display_data" message type from the message spec.
+   */
+  DisplayData,
+
+  /**
+   * The "stream" message type from the message spec.
+   */
+  Stream,
+
+  /**
+   * The "error" message type from the message spec.
+   */
+  Error
+}
+
 /**
 * The base interface for an output view model.
 */
@@ -36,7 +59,7 @@ class OutputBaseViewModel {
   /**
   * The output type.
   */
-  outputType: string; // "execute_result" | "display_data" | "stream" | "error"
+  outputType: OutputType;
 }
 
 
@@ -68,6 +91,18 @@ class ExecuteResultViewModel extends DisplayDataViewModel {
   executionCount: number; // this is also a property on the cell?
 }
 
+export
+enum StreamName {
+  /**
+   * The "stdout" stream name from the message spec.
+   */
+  StdOut,
+
+  /**
+   * The "stderr" stream name from the message spec.
+   */
+  StdErr
+}
 
 /**
 * An output view model for stream data.
@@ -77,7 +112,7 @@ class StreamViewModel extends OutputBaseViewModel {
   /**
   * The type of stream.
   */
-  name: string; // "stdout", "stderr"
+  name: StreamName;
 
   /**
   * The text from the stream.
@@ -86,7 +121,7 @@ class StreamViewModel extends OutputBaseViewModel {
 }
 
 function isStreamViewModel(model: OutputBaseViewModel): model is StreamViewModel {
-  return model.outputType === "stream";
+  return model.outputType === OutputType.Stream;
 }
 
 /**
@@ -339,36 +374,48 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
 export
 function consumeMessage(msg: any, outputArea: IOutputAreaViewModel): void {
     let output: any = {};
-    let msgType = output.outputType = msg.header.msg_type;
     let content = msg.content;
-    switch (msgType) {
+    switch (msg.header.msg_type) {
     case 'clear_output':
       outputArea.clear(content.wait)
       break;
     case 'stream':
+      output.outputType = OutputType.Stream;
       output.text = content.text;
-      output.name = content.name;
+      switch(content.name) {
+      case "stderr":
+        output.name = StreamName.StdErr;
+        break;
+      case "stdout":
+        output.name = StreamName.StdOut;
+        break;
+      default:
+        throw new Error(`Unrecognized stream type ${content.name}`);
+      }
       outputArea.add(output);
       break;
     case 'display_data':
+      output.outputType = OutputType.DisplayData;
       output.data = content.data;
       output.metadata = content.metadata;
       outputArea.add(output);
     break;
     case 'execute_result':
+      output.outputType = OutputType.ExecuteResult;
       output.data = content.data;
       output.metadata = content.metadata;
       output.execution_count = content.execution_count;
       outputArea.add(output);
       break;
     case 'error':
+      output.outputType = OutputType.Error;
       output.ename = content.ename;
       output.evalue = content.evalue;
       output.traceback = content.traceback.join('\n');
       outputArea.add(output);
       break;
     default:
-      console.error('unhandled message', msg);
+      console.error('Unhandled message', msg);
     }
 }
 

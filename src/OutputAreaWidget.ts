@@ -16,7 +16,7 @@ import {
 } from 'phosphor-widget';
 
 import {
-  IOutputAreaViewModel, OutputViewModel, ExecuteResultViewModel,
+  IOutputAreaViewModel, OutputViewModel, ExecuteResultViewModel, OutputType,
   ExecuteErrorViewModel, StreamViewModel, DisplayDataViewModel, MimeBundle
 } from './OutputAreaViewModel';
 
@@ -161,16 +161,16 @@ class OutputAreaWidget extends Panel {
   renderItem(output: OutputViewModel): Promise<HTMLElement> {
     let bundle: MimeBundle;
     switch(output.outputType) {
-    case 'execute_result':
+    case OutputType.ExecuteResult:
       bundle = (output as ExecuteResultViewModel).data;
       break;
-    case 'display_data':
+    case OutputType.DisplayData:
       bundle = (output as DisplayDataViewModel).data;
       break;
-    case 'stream':
+    case OutputType.Stream:
       bundle = {'jupyter/console-text': (output as StreamViewModel).text};
       break;
-    case 'error':
+    case OutputType.Error:
       // to get typing to work easily, we make a new temporary variable
       let out: ExecuteErrorViewModel = output as ExecuteErrorViewModel;
       bundle = {'jupyter/console-text': out.traceback || `${out.ename}: ${out.evalue}`};
