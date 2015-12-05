@@ -336,6 +336,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
 /**
   * A function to update an output area viewmodel to reflect a stream of messages 
   */
+export
 function consumeMessage(msg: any, outputArea: OutputAreaViewModel): void {
     let output: any = {};
     let msgType = output.outputType = msg.header.msg_type;
@@ -367,7 +368,7 @@ function consumeMessage(msg: any, outputArea: OutputAreaViewModel): void {
       outputArea.add(output);
       break;
     default:
-      console.error('unhandled output message', msg);
+      console.error('unhandled message', msg);
     }
 }
 
