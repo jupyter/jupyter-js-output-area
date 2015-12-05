@@ -64,7 +64,8 @@
     "mkdirp": "^0.5.1",
     "nodemon": "^1.4.0",
     "rimraf": "^2.4.2",
-    "steal": "^0.12.7"
+    "steal": "^0.12.7",
+    "typedoc": "^0.3.12"
   },
   "system": {
     "npmIgnore": [

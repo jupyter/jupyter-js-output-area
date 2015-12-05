@@ -1,0 +1,14 @@
+{
+  "target": "ES5",
+  "module": "commonjs",
+  "moduleResolution": "node",
+  "excludeNotExported": true,
+  "mode": "file",
+  "out": "docs/api",
+  "src": [
+    "typings/es6/es6-promise.d.ts",
+    "typings/es6/systemjs.d.ts",
+    "typings/transformime/transformime.d.ts",
+    "src/index.ts"
+  ]
+}
