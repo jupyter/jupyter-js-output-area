@@ -290,6 +290,12 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * (e.g. for streams).
    */
   add(output: OutputViewModel) {
+    // if we received a delayed clear message, then clear now
+    if (this._clearNext) {
+      this.clear(false);
+      this._clearNext = false;
+    }
+    
     // Consolidate outputs if they are stream outputs of the same kind
     let lastOutput = this.outputs.get(-1);
     if (isStreamViewModel(output)
@@ -307,70 +313,61 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
 
   /**
   * Clear all of the output.
+  * 
+  * @param wait Delay clearing the output until the next message is added.
   */
-  clear() {
-    this.outputs.clear();
+  clear(wait: boolean) {
+    if(wait) {
+      this._clearNext = true;
+    } else {
+      this.outputs.clear();
+    }
   }
 
   outputs = new ObservableList<OutputViewModel>();
+  
+  /**
+   * Whether to clear on the next message add.
+   */
+  private _clearNext = false;
 }
 
 
 /**
-  * A class to update an output area viewmodel to reflect a stream of messages 
+  * A function to update an output area viewmodel to reflect a stream of messages 
   */
-export
-class MsgTransformer {
-  constructor(model: OutputAreaViewModel) {
-    this._model = model;
-  }
-  
-  consumeMessage(msg: any): void {
-      if (this._clearNext) {
-          this._model.outputs.clear()
-          this._clearNext = false;
-      }
-  
-      let output: any = {};
-      let msgType = output.outputType = msg.header.msg_type;
-      let content = msg.content;
-      switch (msgType) {
-      case 'clear_output':
-        // msg spec v4 had stdout, stderr, display keys
-        // v4.1 replaced these with just wait
-        // The default behavior is the same (stdout=stderr=display=True, wait=False),
-        // so v4 messages will still be properly handled,
-        // except for the rarely-used clearing less than all output.
-        if (msg.content.wait) {
-          this._clearNext = true;
-        } else {
-          this._model.outputs.clear()
-        }
-      case 'stream':
-        output.text = content.text;
-        output.name = content.name;
-        break;
-      case 'display_data':
-        output.data = content.data;
-        output.metadata = content.metadata;
-        break;
-      case 'execute_result':
-        output.data = content.data;
-        output.metadata = content.metadata;
-        output.execution_count = content.execution_count;
-        break;
-      case 'error':
-        output.ename = content.ename;
-        output.evalue = content.evalue;
-        output.traceback = content.traceback.join('\n');
-        break;
-      default:
-        console.error('unhandled output message', msg);
-      }
-      this._model.add(output);
-  }
-
-  private _clearNext: boolean;
-  private _model: OutputAreaViewModel;
+function consumeMessage(msg: any, outputArea: OutputAreaViewModel): void {
+    let output: any = {};
+    let msgType = output.outputType = msg.header.msg_type;
+    let content = msg.content;
+    switch (msgType) {
+    case 'clear_output':
+      outputArea.clear(msg.content.wait)
+      break;
+    case 'stream':
+      output.text = content.text;
+      output.name = content.name;
+      outputArea.add(output);
+      break;
+    case 'display_data':
+      output.data = content.data;
+      output.metadata = content.metadata;
+      outputArea.add(output);
+    break;
+    case 'execute_result':
+      output.data = content.data;
+      output.metadata = content.metadata;
+      output.execution_count = content.execution_count;
+      outputArea.add(output);
+      break;
+    case 'error':
+      output.ename = content.ename;
+      output.evalue = content.evalue;
+      output.traceback = content.traceback.join('\n');
+      outputArea.add(output);
+      break;
+    default:
+      console.error('unhandled output message', msg);
+    }
 }
 
