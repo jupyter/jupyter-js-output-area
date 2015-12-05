@@ -337,13 +337,13 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
   * A function to update an output area viewmodel to reflect a stream of messages 
   */
 export
-function consumeMessage(msg: any, outputArea: OutputAreaViewModel): void {
+function consumeMessage(msg: any, outputArea: IOutputAreaViewModel): void {
     let output: any = {};
     let msgType = output.outputType = msg.header.msg_type;
     let content = msg.content;
     switch (msgType) {
     case 'clear_output':
-      outputArea.clear(msg.content.wait)
+      outputArea.clear(content.wait)
       break;
     case 'stream':
       output.text = content.text;
