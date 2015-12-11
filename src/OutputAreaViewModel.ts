@@ -14,6 +14,7 @@ import {
   ObservableList
 } from 'phosphor-observablelist';
 
+
 /**
 * A Mime bundle of data.
 */
@@ -21,6 +22,7 @@ export interface MimeBundle {
   [key: string]: string;
   'application/json'?: any;
 }
+
 
 export
 enum OutputType {
@@ -44,6 +46,7 @@ enum OutputType {
    */
   Error
 }
+
 
 /**
 * The base interface for an output view model.
@@ -91,6 +94,7 @@ class ExecuteResultViewModel extends DisplayDataViewModel {
   executionCount: number; // this is also a property on the cell?
 }
 
+
 export
 enum StreamName {
   /**
@@ -103,6 +107,7 @@ enum StreamName {
    */
   StdErr
 }
+
 
 /**
 * An output view model for stream data.
@@ -120,9 +125,11 @@ class StreamViewModel extends OutputBaseViewModel {
   text: string;
 }
 
+
 function isStreamViewModel(model: OutputBaseViewModel): model is StreamViewModel {
   return model.outputType === OutputType.Stream;
 }
+
 
 /**
 * An output view model for an execute error.
@@ -148,6 +155,7 @@ class ExecuteErrorViewModel extends OutputBaseViewModel {
   traceback: string;
 }
 
+
 /**
 * An output model that is one of the valid output types.
 */
@@ -156,6 +164,7 @@ type OutputViewModel = (
   ExecuteResultViewModel | DisplayDataViewModel | StreamViewModel | 
   ExecuteErrorViewModel
 );
+
 
 /**
 * The view model for an output area.
@@ -199,6 +208,7 @@ interface IOutputAreaViewModel {
   */
   clear(wait: boolean): void;
 }
+
 
 /**
  * An implementation of an input area view model.
@@ -399,7 +409,7 @@ function consumeMessage(msg: any, outputArea: IOutputAreaViewModel): void {
       output.data = content.data;
       output.metadata = content.metadata;
       outputArea.add(output);
-    break;
+      break;
     case 'execute_result':
       output.outputType = OutputType.ExecuteResult;
       output.data = content.data;

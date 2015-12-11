@@ -10,7 +10,6 @@ import {
   ISignal, Signal
 } from 'phosphor-signaling';
 
-
 import {
   ResizeMessage, Widget, Panel
 } from 'phosphor-widget';
@@ -64,6 +63,7 @@ let transformers = [
  * A global transformime object to render all outputs.
  */
 let transform = new Transformime(transformers);
+
 
 export
 class OutputAreaWidget extends Panel {
@@ -209,8 +209,6 @@ class OutputAreaWidget extends Panel {
 
   protected updatePrompt(prompt: string): void {
   }
-
-
 
   private _model: IOutputAreaViewModel;  
 }
