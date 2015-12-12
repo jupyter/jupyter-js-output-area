@@ -364,7 +364,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
     // Consolidate outputs if they are stream outputs of the same kind
     let lastOutput = this.outputs.get(-1);
     if (isStreamViewModel(output)
-        && isStreamViewModel(lastOutput)
+        && lastOutput && isStreamViewModel(lastOutput)
         && output.name === lastOutput.name) {
       // In order to get a list change event, we add the previous 
       // text to the current item and replace the previous item. 
