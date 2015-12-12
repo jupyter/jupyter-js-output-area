@@ -20,7 +20,7 @@ import {
 } from './OutputAreaViewModel';
 
 import {
-  IListChangedArgs, ListChangeType, ObservableList
+  IListChangedArgs, ListChangeType, ObservableList, IObservableList
 } from 'phosphor-observablelist';
 
 import {
@@ -75,84 +75,13 @@ class OutputAreaWidget extends Panel {
     this.updateFixedHeight(model.fixedHeight)
     this.updatePrompt(model.prompt);
     model.stateChanged.connect(this.modelStateChanged, this);
-    model.outputs.changed.connect(this.outputsChanged, this);
-  }
-
-  outputsChanged(sender: ObservableList<OutputViewModel>, 
-                 change: IListChangedArgs<OutputViewModel>): void {
-    switch (change.type) {
-    case ListChangeType.Add:
-      this.addItem(change.newIndex, change.newValue as OutputViewModel);
-      break;
-    case ListChangeType.Move:
-      this.moveItem(change.oldIndex, change.newIndex);
-      break;
-    case ListChangeType.Remove:
-      this.removeItem(change.oldIndex);
-      break;
-    case ListChangeType.Replace:
-      this.replaceItems(change.oldIndex, (change.oldValue as OutputViewModel[]).length, change.newValue as OutputViewModel[])
-      break;
-    case ListChangeType.Set:
-      this.setItem(change.newIndex, change.newValue as OutputViewModel);
-      break;
-    default:
-      console.error("Output list change event not recognized")
-    }
-  }
-  
-  /**
-   * Insert a rendered item at the specified index in the DOM. 
-   */
-  addItem(index: number, item: OutputViewModel) {
-    let node = document.createElement('div');
-    let children = this.node.children;
-    if (index === children.length) {
-      this.node.appendChild(node);
-    } else {
-      this.node.insertBefore(node, children[index]);
-    }
-    this.renderItem(item).then((childNode) => {
-      node.appendChild(childNode);
+    follow<OutputViewModel, Widget>(model.outputs, this.children, (out) => {
+      let w = new Widget();
+      this.renderItem(out).then((out) => {
+        w.node.appendChild(out);
+      });
+      return w;
     });
-  }
-  
-  /**
-   * Move a rendered item in the DOM. 
-   */
-  moveItem(oldIndex: number, newIndex: number): void {
-    let children = this.node.children;
-    if (newIndex === children.length) {
-      this.node.appendChild(children[oldIndex])
-    } else {
-      this.node.insertBefore(children[oldIndex], children[newIndex]);
-    }
-  }
-  
-  /**
-   * Remove a rendered item in the DOM. 
-   */
-  removeItem(index: number): void {
-    this.node.removeChild(this.node.children[index]);
-  }
-
-  /**
-   * Replace a list of rendered items with new rendered items in the DOM. 
-   */
-  replaceItems(index: number, count: number, items: OutputViewModel[]) {
-    for(let i = 0; i < count; i++) {
-      this.removeItem(index);
-    }
-    for(let i = 0; i < items.length; i++) {
-      this.addItem(index + i, items[i])
-    }
-  }
-  
-  /**
-   * Replace a single rendered item with a new rendered item in the DOM. 
-   */
-  setItem(index: number, item: OutputViewModel) {
-    this.replaceItems(index, 1, [item]);
   }
   
   /**
@@ -211,4 +140,42 @@ class OutputAreaWidget extends Panel {
   }
 
   private _model: IOutputAreaViewModel;  
+}
+
+function follow<T,U>(source: IObservableList<T>, 
+                                   sink: IObservableList<U>, 
+                                   factory: (arg: T)=> U) {
+  // Hook up a listener to the source list
+  // make corresponding changes to the sink list
+  // invoke the add function when you need a new item for sink
+  
+  // Initialize sink list
+  sink.clear();
+  for (let i=0; i<source.length; i++) {
+    sink.add(factory(source.get(i)))
+  }
+  
+  source.changed.connect((sender, args) => {
+    switch(args.type) {
+    case ListChangeType.Add:
+      // TODO: type should probably be insert, not add, to be consistent with the functions
+      // TODO: Too bad we *always* have to cast newValue and oldValue
+      sink.insert(args.newIndex, factory(args.newValue as T))
+      break;
+    case ListChangeType.Move:
+      sink.move(args.oldIndex, args.newIndex);
+      break;
+    case ListChangeType.Remove:
+      sink.removeAt(args.oldIndex);
+      break;
+    case ListChangeType.Replace:
+      sink.replace(args.oldIndex, (args.oldValue as T[]).length, 
+                   (args.newValue as T[]).map(factory));
+      break;
+    case ListChangeType.Set:
+      sink.set(args.newIndex, factory(args.newValue as T))
+      break;
+    }
+  });
+  
 }
