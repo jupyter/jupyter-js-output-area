@@ -80,6 +80,11 @@ class DisplayDataViewModel extends OutputBaseViewModel {
   * Metadata about the output.
   */
   metadata: any;
+  
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.DisplayData;
 }
 
 
@@ -92,6 +97,11 @@ class ExecuteResultViewModel extends DisplayDataViewModel {
   * The current execution count.
   */
   executionCount: number; // this is also a property on the cell?
+
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.ExecuteResult;
 }
 
 
@@ -123,6 +133,11 @@ class StreamViewModel extends OutputBaseViewModel {
   * The text from the stream.
   */
   text: string;
+
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.Stream;
 }
 
 
@@ -153,6 +168,11 @@ class ExecuteErrorViewModel extends OutputBaseViewModel {
   * This is an array of strings that has been concatenated to a single string.
   */
   traceback: string;
+  
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.Error;
 }
 
 
