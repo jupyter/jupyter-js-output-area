@@ -396,5 +396,3 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    */
   private _clearNext = false;
 }
-
-

@@ -3,6 +3,10 @@
 'use strict';
 
 import {
+  IListChangedArgs, ListChangeType, ObservableList, IObservableList
+} from 'phosphor-observablelist';
+
+import {
   IChangedArgs
 } from 'phosphor-properties';
 
@@ -13,15 +17,6 @@ import {
 import {
   ResizeMessage, Widget, Panel
 } from 'phosphor-widget';
-
-import {
-  IOutputAreaViewModel, OutputViewModel, ExecuteResultViewModel, OutputType,
-  ExecuteErrorViewModel, StreamViewModel, DisplayDataViewModel, MimeBundle
-} from './OutputAreaViewModel';
-
-import {
-  IListChangedArgs, ListChangeType, ObservableList, IObservableList
-} from 'phosphor-observablelist';
 
 import {
     Transformime,
@@ -39,12 +34,17 @@ import {
     ScriptTransform
 } from "transformime-jupyter-transformers";
 
+import {
+  IOutputAreaViewModel, OutputViewModel, ExecuteResultViewModel, OutputType,
+  ExecuteErrorViewModel, StreamViewModel, DisplayDataViewModel, MimeBundle
+} from './OutputAreaViewModel';
+
 
 /**
  * A list of transformers used to render outputs
  * 
  * #### Notes
- * The transformers are in ascending priority, so later transforms are more
+ * The transformers are in ascending priority--later transforms are more
  * important than earlier ones.
  */
 let transformers = [
@@ -65,8 +65,15 @@ let transformers = [
 let transform = new Transformime(transformers);
 
 
+/**
+ * An output area widget.
+ */
 export
 class OutputAreaWidget extends Panel {
+  
+  /**
+   * Construct an output area widget.
+   */
   constructor(model: IOutputAreaViewModel) {
     super();
     this.addClass('jp-OutputArea');
@@ -100,7 +107,6 @@ class OutputAreaWidget extends Panel {
       bundle = {'jupyter/console-text': (output as StreamViewModel).text};
       break;
     case OutputType.Error:
-      // to get typing to work easily, we make a new temporary variable
       let out: ExecuteErrorViewModel = output as ExecuteErrorViewModel;
       bundle = {'jupyter/console-text': out.traceback || `${out.ename}: ${out.evalue}`};
       break;
@@ -113,7 +119,7 @@ class OutputAreaWidget extends Panel {
   }
 
   /**
-   * Change handler for model updates.
+   * Change handler for model state changes.
    */
   protected modelStateChanged(sender: IOutputAreaViewModel, 
                               args: IChangedArgs<any>) {
