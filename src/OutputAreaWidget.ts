@@ -82,7 +82,7 @@ class OutputAreaWidget extends Panel {
     this.updateFixedHeight(model.fixedHeight)
     this.updatePrompt(model.prompt);
     model.stateChanged.connect(this.modelStateChanged, this);
-    follow<OutputViewModel, Widget>(model.outputs, this.children, (out) => {
+    follow<OutputViewModel>(model.outputs, this, (out) => {
       let w = new Widget();
       this.renderItem(out).then((out) => {
         w.node.appendChild(out);
@@ -148,40 +148,39 @@ class OutputAreaWidget extends Panel {
   private _model: IOutputAreaViewModel;  
 }
 
-function follow<T,U>(source: IObservableList<T>, 
-                                   sink: IObservableList<U>, 
-                                   factory: (arg: T)=> U) {
-  // Hook up a listener to the source list
-  // make corresponding changes to the sink list
-  // invoke the add function when you need a new item for sink
-  
-  // Initialize sink list
-  sink.clear();
-  for (let i=0; i<source.length; i++) {
-    sink.add(factory(source.get(i)))
+function follow<T>(source: IObservableList<T>, 
+                     sink: Panel, 
+                     factory: (arg: T)=> Widget) {
+
+  for (let i = sink.childCount()-1; i>=0; i--) {
+    sink.childAt(i).dispose();
   }
-  
+  for (let i=0; i<source.length; i++) {
+    sink.addChild(factory(source.get(i)))
+  }  
   source.changed.connect((sender, args) => {
     switch(args.type) {
     case ListChangeType.Add:
-      // TODO: type should probably be insert, not add, to be consistent with the functions
-      // TODO: Too bad we *always* have to cast newValue and oldValue
-      sink.insert(args.newIndex, factory(args.newValue as T))
+      sink.insertChild(args.newIndex, factory(args.newValue as T))
       break;
     case ListChangeType.Move:
-      sink.move(args.oldIndex, args.newIndex);
+      sink.insertChild(args.newIndex, sink.childAt(args.oldIndex));
       break;
     case ListChangeType.Remove:
-      sink.removeAt(args.oldIndex);
+      sink.childAt(args.oldIndex).dispose();
       break;
     case ListChangeType.Replace:
-      sink.replace(args.oldIndex, (args.oldValue as T[]).length, 
-                   (args.newValue as T[]).map(factory));
+      for (let i = (args.oldValue as T[]).length; i>0; i--) {
+        sink.childAt(args.oldIndex).dispose();
+      }
+      for (let i = (args.newValue as T[]).length; i>0; i--) {
+        sink.insertChild(args.newIndex, factory((args.newValue as T[])[i]))
+      }
       break;
     case ListChangeType.Set:
-      sink.set(args.newIndex, factory(args.newValue as T))
+      sink.childAt(args.newIndex).dispose();
+      sink.insertChild(args.newIndex, factory(args.newValue as T))
       break;
     }
   });
-  
 }
