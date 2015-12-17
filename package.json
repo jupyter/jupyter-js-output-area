@@ -52,6 +52,7 @@
   },
   "homepage": "https://github.com/jupyter/jupyter-js-output-area#readme",
   "dependencies": {
+    "phosphor-disposable": "^1.0.5",
     "phosphor-observablelist": "^1.0.0-beta",
     "phosphor-properties": "^2.0.0",
     "phosphor-signaling": "^1.2.0",

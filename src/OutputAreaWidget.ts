@@ -39,6 +39,10 @@ import {
   ExecuteErrorViewModel, StreamViewModel, DisplayDataViewModel, MimeBundle
 } from './OutputAreaViewModel';
 
+import {
+  DisposableDelegate, IDisposable
+} from 'phosphor-disposable';
+
 
 /**
  * A list of transformers used to render outputs
@@ -82,7 +86,7 @@ class OutputAreaWidget extends Panel {
     this.updateFixedHeight(model.fixedHeight)
     this.updatePrompt(model.prompt);
     model.stateChanged.connect(this.modelStateChanged, this);
-    follow<OutputViewModel>(model.outputs, this, (out) => {
+    this._listdispose = follow<OutputViewModel>(model.outputs, this, (out) => {
       let w = new Widget();
       this.renderItem(out).then((out) => {
         w.node.appendChild(out);
@@ -145,20 +149,26 @@ class OutputAreaWidget extends Panel {
   protected updatePrompt(prompt: string): void {
   }
 
-  private _model: IOutputAreaViewModel;  
+  dispose() {
+    this._listdispose.dispose();
+    super.dispose();
+  }
+  
+  private _model: IOutputAreaViewModel;
+  private _listdispose: IDisposable;
 }
 
 function follow<T>(source: IObservableList<T>, 
                      sink: Panel, 
-                     factory: (arg: T)=> Widget) {
+                     factory: (arg: T)=> Widget): IDisposable {
 
   for (let i = sink.childCount()-1; i>=0; i--) {
     sink.childAt(i).dispose();
   }
   for (let i=0; i<source.length; i++) {
     sink.addChild(factory(source.get(i)))
-  }  
-  source.changed.connect((sender, args) => {
+  }
+  function callback(sender: ObservableList<T>, args: IListChangedArgs<T>) {
     switch(args.type) {
     case ListChangeType.Add:
       sink.insertChild(args.newIndex, factory(args.newValue as T))
@@ -182,5 +192,10 @@ function follow<T>(source: IObservableList<T>,
       sink.insertChild(args.newIndex, factory(args.newValue as T))
       break;
     }
-  });
+  }
+  source.changed.connect(callback);
+  return new DisposableDelegate(() => {
+    source.changed.disconnect(callback);
+  })
 }
+
