@@ -56,7 +56,8 @@
     "phosphor-observablelist": "^1.0.0-beta",
     "phosphor-properties": "^2.0.0",
     "phosphor-signaling": "^1.2.0",
-    "phosphor-widget": "^1.0.0-beta.3",
+    "phosphor-widget": "^1.0.0-rc.0",
+    "phosphor-panel": "^1.0.0-rc.1",
     "transformime": "^2.1.0",
     "transformime-jupyter-transformers": "^0.2.0"
   },
