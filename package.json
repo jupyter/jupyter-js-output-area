@@ -16,11 +16,6 @@
     "docs": "rimraf docs/api && typedoc --options scripts/tdoptions.json",
     "postinstall": "npm dedupe",
     "prepublish": "npm run build",
-    "test:chrome": "karma start --browsers=Chrome test/karma.conf.js",
-    "test:coverage": "karma start test/karma-cov.conf.js",
-    "test:firefox": "karma start --browsers=Firefox test/karma.conf.js",
-    "test:ie": "karma start --browsers=IE test/karma.conf.js",
-    "test": "npm run test:firefox",
     "watch": "npm run watch:build -s",
     "watch:build": "nodemon -q -w src/ --ext ts,js --exec 'npm run build'"
   },
@@ -69,10 +64,5 @@
     "steal": "^0.12.7",
     "typedoc": "^0.3.12",
     "typescript": "^1.7.3"
-  },
-  "system": {
-    "npmIgnore": [
-      "devDependencies"
-    ]
   }
 }
