@@ -39,9 +39,9 @@ import {
 } from "transformime-jupyter-transformers";
 
 import {
-  IOutputAreaViewModel, OutputViewModel, ExecuteResultViewModel, OutputType,
-  ExecuteErrorViewModel, StreamViewModel, DisplayDataViewModel, MimeBundle
-} from './OutputAreaViewModel';
+  IOutputAreaModel, OutputModel, ExecuteResultModel, OutputType,
+  ExecuteErrorModel, StreamModel, DisplayDataModel, MimeBundle
+} from './model';
 
 import {
   DisposableDelegate, IDisposable
@@ -82,15 +82,12 @@ class OutputAreaWidget extends Panel {
   /**
    * Construct an output area widget.
    */
-  constructor(model: IOutputAreaViewModel) {
+  constructor(model: IOutputAreaModel) {
     super();
     this.addClass('jp-OutputArea');
     this._model = model;
-    this.updateCollapsed(model.collapsed);
-    this.updateFixedHeight(model.fixedHeight)
-    this.updatePrompt(model.prompt);
     model.stateChanged.connect(this.modelStateChanged, this);
-    this._listdispose = follow<OutputViewModel>(model.outputs, this, (out) => {
+    this._listdispose = follow<OutputModel>(model.outputs, this, (out) => {
       let w = new Widget();
       this.renderItem(out).then((out) => {
         w.node.appendChild(out);
@@ -102,20 +99,20 @@ class OutputAreaWidget extends Panel {
   /**
    * Render an item using the transformime library.
    */
-  renderItem(output: OutputViewModel): Promise<HTMLElement> {
+  renderItem(output: OutputModel): Promise<HTMLElement> {
     let bundle: MimeBundle;
     switch(output.outputType) {
     case OutputType.ExecuteResult:
-      bundle = (output as ExecuteResultViewModel).data;
+      bundle = (output as ExecuteResultModel).data;
       break;
     case OutputType.DisplayData:
-      bundle = (output as DisplayDataViewModel).data;
+      bundle = (output as DisplayDataModel).data;
       break;
     case OutputType.Stream:
-      bundle = {'jupyter/console-text': (output as StreamViewModel).text};
+      bundle = {'jupyter/console-text': (output as StreamModel).text};
       break;
     case OutputType.Error:
-      let out: ExecuteErrorViewModel = output as ExecuteErrorViewModel;
+      let out: ExecuteErrorModel = output as ExecuteErrorModel;
       bundle = {'jupyter/console-text': out.traceback || `${out.ename}: ${out.evalue}`};
       break;
     default:
@@ -129,39 +126,37 @@ class OutputAreaWidget extends Panel {
   /**
    * Change handler for model state changes.
    */
-  protected modelStateChanged(sender: IOutputAreaViewModel, 
+  protected modelStateChanged(sender: IOutputAreaModel, 
                               args: IChangedArgs<any>) {
     switch (args.name) {
     case 'collapsed':
-      this.updateCollapsed(args.newValue);
       break;
     case 'fixedHeight':
-      this.updateFixedHeight(args.newValue);
       break;
     case 'prompt':
-      this.updatePrompt(args.newValue);
       break;
     }
   }
 
-  protected updateCollapsed(collapsed: boolean): void {
-  }
-
-  protected updateFixedHeight(fixedHeight: boolean): void {
-  }
-
-  protected updatePrompt(prompt: string): void {
-  }
-
+  /**
+   * Dispose the object and its data attributes.
+   */
   dispose() {
     this._listdispose.dispose();
     super.dispose();
   }
   
-  private _model: IOutputAreaViewModel;
+  private _model: IOutputAreaModel;
   private _listdispose: IDisposable;
 }
 
+/**
+ * Make a panel mirror changes to an observable list.
+ * 
+ * @param source - The observable list.
+ * @param sink - The Panel.
+ * @param factory - A function which takes an item from the list and constructs a widget.
+ */
 function follow<T>(source: IObservableList<T>, 
                      sink: Panel, 
                      factory: (arg: T)=> Widget): IDisposable {

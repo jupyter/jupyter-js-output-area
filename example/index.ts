@@ -5,13 +5,13 @@ import {
 } from 'phosphor-widget';
 
 import {
-  OutputAreaViewModel, OutputAreaWidget, IOutputAreaViewModel,
+  OutputAreaModel, OutputAreaWidget, IOutputAreaModel,
   OutputType, StreamName
 } from '../lib/index';
 
 
 function main(): void {
-  let model = new OutputAreaViewModel();
+  let model = new OutputAreaModel();
 
   // import the data json file
   System.import('example/data/data.json').then((data: any[]) => {
@@ -26,10 +26,10 @@ function main(): void {
 main();
 
 /**
-  * A function to update an output area viewmodel to reflect a stream of messages 
+  * A function to update an output area Model to reflect a stream of messages 
   */
 export
-function consumeMessage(msg: any, outputArea: IOutputAreaViewModel): void {
+function consumeMessage(msg: any, outputArea: IOutputAreaModel): void {
     let output: any = {};
     let content = msg.content;
     switch (msg.header.msg_type) {
