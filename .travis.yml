@@ -1,18 +1,19 @@
 language: node_js
 node_js:
-    - "4.1"
-    - "4.0"
-    - "0.12"
-    - "0.11"
+- '4.1'
+- '4.0'
+- '0.12'
+- '0.11'
 sudo: false
 env:
   matrix:
-    - GROUP=
+  - GROUP=
   global:
-    - GHREPO=github.com/jupyter/jupyter-js-output-area
+  - GHREPO=github.com/jupyter/jupyter-js-output-area.git
+  - secure: j1Qo/z/874gjjlGVZxrjwOIGD1NYElb6ayOunKu4/6YLDaA+qFoBg2gbt/C9juo6wf92eDugBssHTbPSRO2ybaPduMjDsv1g3aPHC1UkaGgemyP+RnxPDCPpejTU38iX9NymOTwAAoHJha/EJXdvy3ho1rHH7AdNPcsZujXZMci+dUsryRYQP8moCIDHO4WZFPpynFdDMyoPGlYeT/W9F5O59xdJidmXNYQk4R5LY7xqKAQN3lI7bq42hK4BuBOJsccVAh9H1bLnMF20e/pHDH1JvzCMuNhnTor5i/Dx6x+84mBBbh6/dV776AiTs3p/DY2J+EeMkNlsxdGNOivWK9U4D9pFEvYeT6bxWhY36834EYZchklBKxfLu59Cs94fFKXULLVYfKVQSho4T6Z9Wk1abM17JxB7BDaKlNgDYmKdx2ekvWm7e6YOtA2wZnMWr9jeutLthcthI+qxHPgJPbVYDPa/oDpdqE3pQo2EB57KVBUB+SOG/UXIF6vtbb4RbbQ6Gt+bLHvb2/QdDHXzgdA6MBHHqW4CrWVcDKOTCieoHEbKw/PK8PI+Z6/r9bG96H1tuDXG3mVCc12fzEeVWYksBTSd23TeR86ED4COmEAU5umcgFfbf+5qpYkukjfQ7h27YGXarMowP/FB33BoxrK20ZH6ebg7Ouq2VaTBVSU=
 install:
-  - bash scripts/travis_install.sh
+- bash scripts/travis_install.sh
 script:
-  - bash scripts/travis_script.sh
+- bash scripts/travis_script.sh
 after_success:
-  - bash scripts/travis_after_success.sh
+- bash scripts/travis_after_success.sh
