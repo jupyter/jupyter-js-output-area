@@ -4,7 +4,7 @@
   "moduleResolution": "node",
   "excludeNotExported": true,
   "mode": "file",
-  "out": "docs/api",
+  "out": "docs",
   "src": [
     "typings/es6/es6-promise.d.ts",
     "typings/es6/systemjs.d.ts",
