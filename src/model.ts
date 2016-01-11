@@ -49,15 +49,15 @@ enum OutputType {
 
 
 /**
-* The base interface for an output view model.
+* The base interface for an output model.
 */
 export
-class OutputBaseViewModel {
+class OutputBaseModel {
 
   /**
   * A signal emitted when state of the output changes.
   */
-  stateChanged: ISignal<OutputBaseViewModel, IChangedArgs<any>>;
+  stateChanged: ISignal<OutputBaseModel, IChangedArgs<any>>;
 
   /**
   * The output type.
@@ -67,10 +67,10 @@ class OutputBaseViewModel {
 
 
 /**
-* An output view model for display data.
+* An output model for display data.
 */
 export
-class DisplayDataViewModel extends OutputBaseViewModel {
+class DisplayDataModel extends OutputBaseModel {
   /**
   * The raw data for the output.
   */
@@ -80,18 +80,28 @@ class DisplayDataViewModel extends OutputBaseViewModel {
   * Metadata about the output.
   */
   metadata: any;
+  
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.DisplayData;
 }
 
 
 /**
-* An output view model for an execute result.
+* An output model for an execute result.
 */
 export
-class ExecuteResultViewModel extends DisplayDataViewModel {
+class ExecuteResultModel extends DisplayDataModel {
   /**
   * The current execution count.
   */
   executionCount: number; // this is also a property on the cell?
+
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.ExecuteResult;
 }
 
 
@@ -110,10 +120,10 @@ enum StreamName {
 
 
 /**
-* An output view model for stream data.
+* An output model for stream data.
 */
 export 
-class StreamViewModel extends OutputBaseViewModel {
+class StreamModel extends OutputBaseModel {
   /**
   * The type of stream.
   */
@@ -123,19 +133,24 @@ class StreamViewModel extends OutputBaseViewModel {
   * The text from the stream.
   */
   text: string;
+
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.Stream;
 }
 
 
-function isStreamViewModel(model: OutputBaseViewModel): model is StreamViewModel {
+function isStreamModel(model: OutputBaseModel): model is StreamModel {
   return model.outputType === OutputType.Stream;
 }
 
 
 /**
-* An output view model for an execute error.
+* An output model for an execute error.
 */
 export
-class ExecuteErrorViewModel extends OutputBaseViewModel {
+class ExecuteErrorModel extends OutputBaseModel {
   /**
   * The name of the error.
   */
@@ -153,6 +168,11 @@ class ExecuteErrorViewModel extends OutputBaseViewModel {
   * This is an array of strings that has been concatenated to a single string.
   */
   traceback: string;
+  
+  /**
+   * Output type
+   */
+  outputType: OutputType = OutputType.Error;
 }
 
 
@@ -160,22 +180,22 @@ class ExecuteErrorViewModel extends OutputBaseViewModel {
 * An output model that is one of the valid output types.
 */
 export 
-type OutputViewModel = (
-  ExecuteResultViewModel | DisplayDataViewModel | StreamViewModel | 
-  ExecuteErrorViewModel
+type OutputModel = (
+  ExecuteResultModel | DisplayDataModel | StreamModel | 
+  ExecuteErrorModel
 );
 
 
 /**
-* The view model for an output area.
+* The model for an output area.
 */
 export 
-interface IOutputAreaViewModel {
+interface IOutputAreaModel {
 
   /**
   * A signal emitted when state of the output area changes.
   */
-  stateChanged: ISignal<IOutputAreaViewModel, IChangedArgs<any>>;
+  stateChanged: ISignal<IOutputAreaModel, IChangedArgs<any>>;
 
   /**
   * Whether the output is collapsed.
@@ -195,13 +215,13 @@ interface IOutputAreaViewModel {
   /**
   * The actual outputs.
   */
-  outputs: ObservableList<OutputViewModel>;
+  outputs: ObservableList<OutputModel>;
 
   /**
   * A convenience method to add an output to the end of the outputs list, 
   * combining outputs if necessary.
   */
-  add(output: OutputViewModel): void;
+  add(output: OutputModel): void;
 
   /**
   * Clear all of the output.
@@ -211,10 +231,10 @@ interface IOutputAreaViewModel {
 
 
 /**
- * An implementation of an input area view model.
+ * An implementation of an input area model.
  */
 export
-class OutputAreaViewModel implements IOutputAreaViewModel {
+class OutputAreaModel implements IOutputAreaModel {
 
   /**
    * A signal emitted when the state of the model changes.
@@ -225,16 +245,16 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * 
    * **See also:** [[stateChanged]]
    */
-  static stateChangedSignal = new Signal<OutputAreaViewModel, IChangedArgs<any>>();
+  static stateChangedSignal = new Signal<OutputAreaModel, IChangedArgs<any>>();
 
   /**
   * A property descriptor which determines whether the output has a maximum fixed height.
   *
   * **See also:** [[fixedHeight]]
   */
-  static fixedHeightProperty = new Property<OutputAreaViewModel, boolean>({
+  static fixedHeightProperty = new Property<OutputAreaModel, boolean>({
     name: 'fixedHeight',
-    notify: OutputAreaViewModel.stateChangedSignal,
+    notify: OutputAreaModel.stateChangedSignal,
   });
 
   /**
@@ -242,9 +262,9 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
   *
   * **See also:** [[collapsed]]
   */
-  static collapsedProperty = new Property<OutputAreaViewModel, boolean>({
+  static collapsedProperty = new Property<OutputAreaModel, boolean>({
     name: 'collapsed',
-    notify: OutputAreaViewModel.stateChangedSignal,
+    notify: OutputAreaModel.stateChangedSignal,
   });
 
   /**
@@ -252,9 +272,9 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
   *
   * **See also:** [[prompt]]
   */
-  static promptProperty = new Property<OutputAreaViewModel, string>({
+  static promptProperty = new Property<OutputAreaModel, string>({
     name: 'prompt',
-    notify: OutputAreaViewModel.stateChangedSignal,
+    notify: OutputAreaModel.stateChangedSignal,
   });
 
   /**
@@ -267,7 +287,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * This is a pure delegate to the [[stateChangedSignal]].
    */
   get stateChanged() {
-    return OutputAreaViewModel.stateChangedSignal.bind(this);
+    return OutputAreaModel.stateChangedSignal.bind(this);
   }
 
   /**
@@ -277,7 +297,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * This is a pure delegate to the [[fixedHeightProperty]].
    */
   get fixedHeight() {
-    return OutputAreaViewModel.fixedHeightProperty.get(this);
+    return OutputAreaModel.fixedHeightProperty.get(this);
   }
 
   /**
@@ -287,7 +307,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * This is a pure delegate to the [[fixedHeightProperty]].
    */
   set fixedHeight(value: boolean) {
-    OutputAreaViewModel.fixedHeightProperty.set(this, value);
+    OutputAreaModel.fixedHeightProperty.set(this, value);
   }
 
   /**
@@ -297,7 +317,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * This is a pure delegate to the [[collapsedProperty]].
    */
   get collapsed() {
-    return OutputAreaViewModel.collapsedProperty.get(this);
+    return OutputAreaModel.collapsedProperty.get(this);
   }
 
   /**
@@ -307,7 +327,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * This is a pure delegate to the [[collapsedProperty]].
    */
   set collapsed(value: boolean) {
-    OutputAreaViewModel.collapsedProperty.set(this, value);
+    OutputAreaModel.collapsedProperty.set(this, value);
   }
 
   /**
@@ -317,7 +337,7 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * This is a pure delegate to the [[promptProperty]].
    */
   get prompt() {
-    return OutputAreaViewModel.promptProperty.get(this);
+    return OutputAreaModel.promptProperty.get(this);
   }
 
   /**
@@ -327,14 +347,14 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
    * This is a pure delegate to the [[promptProperty]].
    */
   set prompt(value: string) {
-    OutputAreaViewModel.promptProperty.set(this, value);
+    OutputAreaModel.promptProperty.set(this, value);
   }
   
   /**
    * Add an output, which may be combined with previous output 
    * (e.g. for streams).
    */
-  add(output: OutputViewModel) {
+  add(output: OutputModel) {
     // if we received a delayed clear message, then clear now
     if (this._clearNext) {
       this.clear();
@@ -343,8 +363,8 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
     
     // Consolidate outputs if they are stream outputs of the same kind
     let lastOutput = this.outputs.get(-1);
-    if (isStreamViewModel(output)
-        && isStreamViewModel(lastOutput)
+    if (isStreamModel(output)
+        && lastOutput && isStreamModel(lastOutput)
         && output.name === lastOutput.name) {
       // In order to get a list change event, we add the previous 
       // text to the current item and replace the previous item. 
@@ -369,63 +389,10 @@ class OutputAreaViewModel implements IOutputAreaViewModel {
     }
   }
 
-  outputs = new ObservableList<OutputViewModel>();
+  outputs = new ObservableList<OutputModel>();
   
   /**
    * Whether to clear on the next message add.
    */
   private _clearNext = false;
 }
-
-
-/**
-  * A function to update an output area viewmodel to reflect a stream of messages 
-  */
-export
-function consumeMessage(msg: any, outputArea: IOutputAreaViewModel): void {
-    let output: any = {};
-    let content = msg.content;
-    switch (msg.header.msg_type) {
-    case 'clear_output':
-      outputArea.clear(content.wait)
-      break;
-    case 'stream':
-      output.outputType = OutputType.Stream;
-      output.text = content.text;
-      switch(content.name) {
-      case "stderr":
-        output.name = StreamName.StdErr;
-        break;
-      case "stdout":
-        output.name = StreamName.StdOut;
-        break;
-      default:
-        throw new Error(`Unrecognized stream type ${content.name}`);
-      }
-      outputArea.add(output);
-      break;
-    case 'display_data':
-      output.outputType = OutputType.DisplayData;
-      output.data = content.data;
-      output.metadata = content.metadata;
-      outputArea.add(output);
-      break;
-    case 'execute_result':
-      output.outputType = OutputType.ExecuteResult;
-      output.data = content.data;
-      output.metadata = content.metadata;
-      output.execution_count = content.execution_count;
-      outputArea.add(output);
-      break;
-    case 'error':
-      output.outputType = OutputType.Error;
-      output.ename = content.ename;
-      output.evalue = content.evalue;
-      output.traceback = content.traceback.join('\n');
-      outputArea.add(output);
-      break;
-    default:
-      console.error('Unhandled message', msg);
-    }
-}
-
