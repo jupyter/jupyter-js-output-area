@@ -7,26 +7,27 @@ import {
 import {
   OutputAreaModel, OutputAreaWidget, IOutputAreaModel,
   OutputType, StreamName
-} from '../lib/index';
+} from '../../lib/index';
+
+import '../index.css';
 
 
 function main(): void {
   let model = new OutputAreaModel();
 
   // import the data json file
-  System.import('example/data/data.json').then((data: any[]) => {
-    data.forEach((msg) => {
-      consumeMessage(msg, model);
-    })
-  })
+  let data = require('../data/data.json');
+  data.forEach((msg: any) => {
+    consumeMessage(msg, model);
+  });
   let out = new OutputAreaWidget(model);
   out.attach(document.body);
 }
 
-main();
+window.onload = main;
 
 /**
-  * A function to update an output area Model to reflect a stream of messages 
+  * A function to update an output area Model to reflect a stream of messages
   */
 export
 function consumeMessage(msg: any, outputArea: IOutputAreaModel): void {

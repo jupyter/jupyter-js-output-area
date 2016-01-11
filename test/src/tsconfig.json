@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES5",
+    "outDir": "../build"
+  },
+  "files": [
+    "../../typings/expect.js/expect.js.d.ts",
+    "../../typings/mocha/mocha.d.ts",
+    "../../typings/es6/es6-promise.d.ts",
+    "index.ts"
+  ]
+}

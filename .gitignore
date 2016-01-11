@@ -18,6 +18,6 @@ node_modules
 docs/api
 lib/
 *.map
-example/*.js
+example/build
 test/build
 test/coverage
