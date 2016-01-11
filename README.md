@@ -3,6 +3,8 @@ Javascript APIs for Jupyter output area
 
 [![Build Status](https://travis-ci.org/jupyter/jupyter-js-output-area.svg?branch=master)](https://travis-ci.org/jupyter/jupyter-js-output-area)
 
+[API Docs](http://jupyter.github.io/jupyter-js-output-area/)
+
 ## Demo
 In order to run the demo, build the package as described in the instructions
 below and run `npm run dev`. Your browser window will open the demo.
@@ -41,7 +43,7 @@ You can then display the output by appending it to your document.
 document.querySelector('body').appendChild(view.el);
 ```
 
-To have the output area display actual outputs, you can either pass it full 
+To have the output area display actual outputs, you can either pass it full
 Jupyter msgs
 ```js
 model.consumeMessage(msg);
