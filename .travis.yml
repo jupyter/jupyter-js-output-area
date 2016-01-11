@@ -1,11 +1,15 @@
 language: node_js
-
 node_js:
-    - "4.1"
-    - "4.0"
-    - "0.12"
-    - "0.11"
-
-before_script:
-    - npm install
-    - npm build
+  - '0.12'
+sudo: false
+env:
+  matrix:
+    - GROUP=
+  global:
+    - GHREPO=github.com/jupyter/jupyter-js-output-area
+install:
+  - bash scripts/travis_install.sh
+script:
+  - bash scripts/travis_script.sh
+after_success:
+  - bash scripts/travis_after_success.sh
