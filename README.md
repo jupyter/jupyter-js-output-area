@@ -1,5 +1,7 @@
-jupyter-js-output-area
-======================
+DEPRECATED: jupyter-js-output-area
+==================================
+
+This code has been merged into the [jupyter-js-notebook](https://github.com/jupyter/jupyter-js-notebook) repository, where it will continue to be developed.
 
 [![Build Status](https://travis-ci.org/jupyter/jupyter-js-output-area.svg)](https://travis-ci.org/jupyter/jupyter-js-output-area?branch=master)
 [![Coverage Status](https://coveralls.io/repos/jupyter/jupyter-js-output-area/badge.svg?branch=master&service=github)](https://coveralls.io/github/jupyter/jupyter-js-output-area?branch=master)
