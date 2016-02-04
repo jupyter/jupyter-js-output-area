@@ -1,6 +1,6 @@
 {
   "name": "jupyter-js-output-area",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "DEPRECATED: Library for handling and displaying Jupyter output messages.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
